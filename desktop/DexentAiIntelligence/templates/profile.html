@@ -1,0 +1,143 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <div class="profile-avatar-container mb-3">
+                        <img src="{{ url_for('static', filename='assets/default-profile.svg') }}" alt="Profile avatar" class="img-fluid rounded-circle" style="width: 100px;">
+                    </div>
+                    <h5 class="fw-bold mb-1">{{ current_user.username }}</h5>
+                    <p class="text-muted mb-3">{{ current_user.email }}</p>
+                    <button type="button" class="btn btn-primary mb-2">Update Profile</button>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Account Information</h5>
+                    <div class="row mb-2">
+                        <div class="col-6 text-muted">Account Type</div>
+                        <div class="col-6">
+                            {% if current_user.oauth_provider %}
+                                {% if current_user.oauth_provider == 'google' %}
+                                <span class="badge bg-primary"><i class="fab fa-google me-1"></i> Google</span>
+                                {% elif current_user.oauth_provider == 'phone' %}
+                                <span class="badge bg-info"><i class="fas fa-phone me-1"></i> Phone</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge bg-secondary">Email</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6 text-muted">Joined</div>
+                        <div class="col-6">{{ current_user.created_at.strftime('%b %d, %Y') }}</div>
+                    </div>
+                    {% if current_user.phone_number %}
+                    <div class="row mb-2">
+                        <div class="col-6 text-muted">Phone</div>
+                        <div class="col-6">{{ current_user.phone_number }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">Voice Samples</h5>
+                </div>
+                <div class="card-body">
+                    {% if user_profile and user_profile.voice_sample_path %}
+                        <div class="voice-sample-container p-3 mb-3 border rounded">
+                            <h6 class="mb-2">Your Voice Sample</h6>
+                            <audio controls class="w-100 mb-2">
+                                <source src="{{ user_profile.voice_sample_path }}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <div class="d-flex justify-content-end mt-2">
+                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <div class="mb-3">
+                                <i class="fas fa-microphone-alt fa-3x text-muted"></i>
+                            </div>
+                            <h6 class="fw-bold mb-2">No Voice Sample Recorded</h6>
+                            <p class="text-muted mb-3">Record a voice sample to improve accent conversion quality and better preserve your unique voice identity.</p>
+                            <button class="btn btn-primary">Record Voice Sample</button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item mb-3 d-flex">
+                            <div class="timeline-icon me-3">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Audio Settings Updated</h6>
+                                <p class="small text-muted mb-0">Yesterday at 3:45 PM</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item mb-3 d-flex">
+                            <div class="timeline-icon me-3">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Account Created</h6>
+                                <p class="small text-muted mb-0">{{ current_user.created_at.strftime('%b %d, %Y at %I:%M %p') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">Device Management</h5>
+                </div>
+                <div class="card-body">
+                    <div class="device-item mb-3 pb-3 border-bottom">
+                        <div class="d-flex align-items-center">
+                            <div class="device-icon me-3">
+                                <i class="fas fa-laptop fa-lg"></i>
+                            </div>
+                            <div class="device-info flex-grow-1">
+                                <h6 class="mb-1">Windows PC (This Device)</h6>
+                                <p class="small text-muted mb-0">Last active: Just now</p>
+                            </div>
+                            <div class="device-actions">
+                                <span class="badge bg-success">Current</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="device-item">
+                        <div class="d-flex align-items-center">
+                            <div class="device-icon me-3">
+                                <i class="fas fa-mobile-alt fa-lg"></i>
+                            </div>
+                            <div class="device-info flex-grow-1">
+                                <h6 class="mb-1">Android Device</h6>
+                                <p class="small text-muted mb-0">Last active: 2 days ago</p>
+                            </div>
+                            <div class="device-actions">
+                                <button class="btn btn-sm btn-outline-danger">Sign Out</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
