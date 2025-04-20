@@ -1,0 +1,676 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Admin Panel</h5>
+                    <ul class="nav flex-column nav-pills">
+                        <li class="nav-item mb-2">
+                            <a class="nav-link active rounded-pill" href="#overview" data-bs-toggle="tab">
+                                <i class="fas fa-chart-line me-2"></i> Overview
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#users" data-bs-toggle="tab">
+                                <i class="fas fa-users me-2"></i> Users
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#system" data-bs-toggle="tab">
+                                <i class="fas fa-server me-2"></i> System
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#logs" data-bs-toggle="tab">
+                                <i class="fas fa-clipboard-list me-2"></i> Logs
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#settings" data-bs-toggle="tab">
+                                <i class="fas fa-cog me-2"></i> Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Quick Actions</h5>
+                    <div class="d-grid gap-2">
+                        <a href="/dashboard" class="btn btn-outline-primary rounded-pill">
+                            <i class="fas fa-tachometer-alt me-2"></i> User Dashboard
+                        </a>
+                        <button type="button" class="btn btn-outline-danger rounded-pill" id="restartServerBtn">
+                            <i class="fas fa-sync me-2"></i> Restart Server
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="tab-content">
+                <!-- Overview Tab -->
+                <div class="tab-pane fade show active" id="overview">
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-3">
+                            <div class="card h-100 border-0 shadow-sm rounded-4">
+                                <div class="card-body text-center p-4">
+                                    <i class="fas fa-users fa-2x text-primary mb-3"></i>
+                                    <h3 class="fw-bold mb-0">{{ users|length }}</h3>
+                                    <p class="text-muted mb-0">Total Users</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card h-100 border-0 shadow-sm rounded-4">
+                                <div class="card-body text-center p-4">
+                                    <i class="fas fa-user-clock fa-2x text-primary mb-3"></i>
+                                    <h3 class="fw-bold mb-0">{{ active_users|default(1) }}</h3>
+                                    <p class="text-muted mb-0">Active Users</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card h-100 border-0 shadow-sm rounded-4">
+                                <div class="card-body text-center p-4">
+                                    <i class="fas fa-clock fa-2x text-primary mb-3"></i>
+                                    <h3 class="fw-bold mb-0">{{ audio_processing.processed_time|int }} s</h3>
+                                    <p class="text-muted mb-0">Processed Time</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card h-100 border-0 shadow-sm rounded-4">
+                                <div class="card-body text-center p-4">
+                                    <i class="fas fa-microphone-alt fa-2x text-primary mb-3"></i>
+                                    <h3 class="fw-bold mb-0">{{ active_sessions|default(1) }}</h3>
+                                    <p class="text-muted mb-0">Active Sessions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">System Status</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label d-flex justify-content-between">
+                                            <span>CPU Usage</span>
+                                            <span>45%</span>
+                                        </label>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 45%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label d-flex justify-content-between">
+                                            <span>Memory Usage</span>
+                                            <span>62%</span>
+                                        </label>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 62%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label d-flex justify-content-between">
+                                            <span>Disk Usage</span>
+                                            <span>28%</span>
+                                        </label>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info" role="progressbar" style="width: 28%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Server Uptime</label>
+                                        <div class="rounded p-3 bg-dark">
+                                            <code>4 days, 6 hours, 32 minutes</code>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Current Version</label>
+                                        <div class="rounded p-3 bg-dark">
+                                            <code>v1.0.2 (Build 2025-04-16)</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">Recent Activity</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Server Restarted</h6>
+                                        <p class="text-muted small mb-0">Today, 9:45 AM</p>
+                                        <p class="mb-0">Server restarted for maintenance.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">New User Registered</h6>
+                                        <p class="text-muted small mb-0">Today, 8:20 AM</p>
+                                        <p class="mb-0">John Doe (john.doe@example.com) created an account.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">System Alert</h6>
+                                        <p class="text-muted small mb-0">Yesterday, 11:15 PM</p>
+                                        <p class="mb-0">High CPU usage detected. Server load: 87%.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Application Updated</h6>
+                                        <p class="text-muted small mb-0">Yesterday, 3:45 PM</p>
+                                        <p class="mb-0">Application updated to version 1.0.2.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Users Tab -->
+                <div class="tab-pane fade" id="users">
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold">User Management</h5>
+                            <button class="btn btn-sm btn-primary rounded-pill">
+                                <i class="fas fa-plus me-1"></i> Add User
+                            </button>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Auth Provider</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user_id, user_data in users.items() %}
+                                        <tr>
+                                            <td>{{ user_id }}</td>
+                                            <td>{{ user_data.username }}</td>
+                                            <td>{{ user_data.email }}</td>
+                                            <td>
+                                                {% if user_data.oauth_provider %}
+                                                    {{ user_data.oauth_provider }}
+                                                {% else %}
+                                                    Email/Password
+                                                {% endif %}
+                                            </td>
+                                            <td><span class="badge bg-success rounded-pill">Active</span></td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Edit User">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Delete User">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">User Statistics</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 bg-primary bg-opacity-10">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold mb-3">User Growth</h6>
+                                            <div class="chart-container" style="height: 200px;">
+                                                <!-- Chart would be rendered here using Chart.js -->
+                                                <div class="d-flex align-items-center justify-content-center h-100">
+                                                    <p class="text-muted">User growth chart will be displayed here.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 bg-success bg-opacity-10">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold mb-3">User Engagement</h6>
+                                            <div class="chart-container" style="height: 200px;">
+                                                <!-- Chart would be rendered here using Chart.js -->
+                                                <div class="d-flex align-items-center justify-content-center h-100">
+                                                    <p class="text-muted">User engagement chart will be displayed here.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Tab -->
+                <div class="tab-pane fade" id="system">
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">System Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Operating System</label>
+                                        <div class="rounded p-3 bg-dark">
+                                            <code>Linux 5.15.0-86-generic x86_64</code>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Python Version</label>
+                                        <div class="rounded p-3 bg-dark">
+                                            <code>Python 3.11.5</code>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Flask Version</label>
+                                        <div class="rounded p-3 bg-dark">
+                                            <code>Flask 2.3.2</code>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">CPU Info</label>
+                                        <div class="rounded p-3 bg-dark">
+                                            <code>Intel(R) Xeon(R) CPU @ 2.20GHz (4 cores)</code>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Memory</label>
+                                        <div class="rounded p-3 bg-dark">
+                                            <code>Total: 16 GB | Used: 9.8 GB | Free: 6.2 GB</code>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Disk Space</label>
+                                        <div class="rounded p-3 bg-dark">
+                                            <code>Total: 100 GB | Used: 28 GB | Free: 72 GB</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold">Services Status</h5>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill" id="refreshServicesBtn">
+                                <i class="fas fa-sync me-1"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Service</th>
+                                            <th>Status</th>
+                                            <th>Uptime</th>
+                                            <th>Memory Usage</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Web Server (Gunicorn)</td>
+                                            <td><span class="badge bg-success rounded-pill">Running</span></td>
+                                            <td>4d 6h 32m</td>
+                                            <td>256 MB</td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Restart Service">
+                                                        <i class="fas fa-sync"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Stop Service">
+                                                        <i class="fas fa-stop"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Database (PostgreSQL)</td>
+                                            <td><span class="badge bg-success rounded-pill">Running</span></td>
+                                            <td>4d 6h 32m</td>
+                                            <td>512 MB</td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Restart Service">
+                                                        <i class="fas fa-sync"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Stop Service">
+                                                        <i class="fas fa-stop"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Audio Processing Engine</td>
+                                            <td><span class="badge bg-success rounded-pill">Running</span></td>
+                                            <td>4d 6h 32m</td>
+                                            <td>1.2 GB</td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Restart Service">
+                                                        <i class="fas fa-sync"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Stop Service">
+                                                        <i class="fas fa-stop"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Background Tasks</td>
+                                            <td><span class="badge bg-success rounded-pill">Running</span></td>
+                                            <td>4d 6h 32m</td>
+                                            <td>128 MB</td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Restart Service">
+                                                        <i class="fas fa-sync"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Stop Service">
+                                                        <i class="fas fa-stop"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Logs Tab -->
+                <div class="tab-pane fade" id="logs">
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold">System Logs</h5>
+                            <div>
+                                <select class="form-select form-select-sm d-inline-block me-2" style="width: auto;">
+                                    <option value="all">All Logs</option>
+                                    <option value="error">Error</option>
+                                    <option value="warning">Warning</option>
+                                    <option value="info">Info</option>
+                                    <option value="debug">Debug</option>
+                                </select>
+                                <button class="btn btn-sm btn-outline-primary rounded-pill">
+                                    <i class="fas fa-sync me-1"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="logs-container bg-dark p-3" style="height: 400px; overflow-y: auto; font-family: monospace; font-size: 12px;">
+                                <div class="log-entry text-success">[2025-04-16 20:45:44] [INFO] Worker reloading: /home/runner/workspace/main.py modified</div>
+                                <div class="log-entry text-success">[2025-04-16 20:45:44] [INFO] Worker exiting (pid: 1050)</div>
+                                <div class="log-entry text-success">[2025-04-16 20:45:44] [INFO] Booting worker with pid: 1349</div>
+                                <div class="log-entry text-success">[2025-04-16 20:46:00] [INFO] Starting gunicorn 23.0.0</div>
+                                <div class="log-entry text-success">[2025-04-16 20:46:00] [INFO] Listening at: http://0.0.0.0:5000 (1416)</div>
+                                <div class="log-entry text-success">[2025-04-16 20:46:00] [INFO] Using worker: sync</div>
+                                <div class="log-entry text-success">[2025-04-16 20:46:00] [INFO] Booting worker with pid: 1428</div>
+                                <div class="log-entry text-success">[2025-04-16 20:46:01] [INFO] Handling signal: winch</div>
+                                <div class="log-entry text-info">[2025-04-16 20:46:15] [INFO] GET / 200 OK</div>
+                                <div class="log-entry text-info">[2025-04-16 20:46:20] [INFO] GET /download/windows 200 OK</div>
+                                <div class="log-entry text-warning">[2025-04-16 20:46:25] [WARNING] GET /dashboard 302 Found -> redirecting to /login</div>
+                                <div class="log-entry text-info">[2025-04-16 20:46:30] [INFO] GET /login 200 OK</div>
+                                <div class="log-entry text-info">[2025-04-16 20:46:45] [INFO] POST /login 302 Found -> redirecting to /dashboard</div>
+                                <div class="log-entry text-info">[2025-04-16 20:46:50] [INFO] GET /dashboard 200 OK</div>
+                                <div class="log-entry text-info">[2025-04-16 20:47:00] [INFO] GET /settings 200 OK</div>
+                                <div class="log-entry text-info">[2025-04-16 20:47:15] [INFO] POST /api/update_settings 200 OK</div>
+                                <div class="log-entry text-danger">[2025-04-16 20:47:30] [ERROR] Exception on /api/launch_desktop [POST]</div>
+                                <div class="log-entry text-danger">[2025-04-16 20:47:30] [ERROR] Traceback (most recent call last):</div>
+                                <div class="log-entry text-danger">[2025-04-16 20:47:30] [ERROR]   File "/app/main.py", line 271, in launch_desktop</div>
+                                <div class="log-entry text-danger">[2025-04-16 20:47:30] [ERROR]     # Error: Desktop app not available on server</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Tab -->
+                <div class="tab-pane fade" id="settings">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">System Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Performance</h6>
+                                    
+                                    <div class="mb-3">
+                                        <label for="maxWorkers" class="form-label">Maximum Worker Processes</label>
+                                        <input type="number" class="form-control" id="maxWorkers" value="4" min="1" max="16">
+                                        <div class="form-text">Number of Gunicorn worker processes to spawn.</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="connectionTimeout" class="form-label">Connection Timeout (seconds)</label>
+                                        <input type="number" class="form-control" id="connectionTimeout" value="60" min="10" max="300">
+                                    </div>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="enableCaching" checked>
+                                        <label class="form-check-label" for="enableCaching">
+                                            Enable Response Caching
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="enableCompression" checked>
+                                        <label class="form-check-label" for="enableCompression">
+                                            Enable Content Compression
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Security</h6>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="enableSSL" checked>
+                                        <label class="form-check-label" for="enableSSL">
+                                            Enable SSL/TLS
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="enableCSRF" checked>
+                                        <label class="form-check-label" for="enableCSRF">
+                                            Enable CSRF Protection
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="enableRateLimiting" checked>
+                                        <label class="form-check-label" for="enableRateLimiting">
+                                            Enable Rate Limiting
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="sessionTimeout" class="form-label">Session Timeout (minutes)</label>
+                                        <input type="number" class="form-control" id="sessionTimeout" value="30" min="5" max="120">
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Logging</h6>
+                                    
+                                    <div class="mb-3">
+                                        <label for="logLevel" class="form-label">Log Level</label>
+                                        <select class="form-select" id="logLevel">
+                                            <option value="debug">Debug</option>
+                                            <option value="info" selected>Info</option>
+                                            <option value="warning">Warning</option>
+                                            <option value="error">Error</option>
+                                            <option value="critical">Critical</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="logRetention" class="form-label">Log Retention (days)</label>
+                                        <input type="number" class="form-control" id="logRetention" value="14" min="1" max="90">
+                                    </div>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="enableRequestLogging" checked>
+                                        <label class="form-check-label" for="enableRequestLogging">
+                                            Log HTTP Requests
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-primary rounded-pill px-4">
+                                        <i class="fas fa-save me-2"></i> Save Settings
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Restart Server Modal -->
+<div class="modal fade" id="restartServerModal" tabindex="-1" aria-labelledby="restartServerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold" id="restartServerModalLabel">Restart Server</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Restarting the server will disconnect all active users.
+                </div>
+                <p>Are you sure you want to restart the server?</p>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger rounded-pill" id="confirmRestartBtn">
+                    <i class="fas fa-sync me-2"></i> Restart Server
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Restart server button
+        const restartServerBtn = document.getElementById('restartServerBtn');
+        const restartServerModal = new bootstrap.Modal(document.getElementById('restartServerModal'));
+        
+        if (restartServerBtn) {
+            restartServerBtn.addEventListener('click', function() {
+                restartServerModal.show();
+            });
+        }
+        
+        // Confirm restart button
+        const confirmRestartBtn = document.getElementById('confirmRestartBtn');
+        
+        if (confirmRestartBtn) {
+            confirmRestartBtn.addEventListener('click', function() {
+                // Show loading spinner
+                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Restarting...';
+                this.disabled = true;
+                
+                // Close modal after a delay (simulating restart)
+                setTimeout(() => {
+                    restartServerModal.hide();
+                    
+                    // Show notification
+                    showNotification('Server restarted successfully!', 'success');
+                    
+                    // Reset button after a delay
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-sync me-2"></i> Restart Server';
+                        this.disabled = false;
+                    }, 1000);
+                }, 2000);
+            });
+        }
+        
+        // Refresh services button
+        const refreshServicesBtn = document.getElementById('refreshServicesBtn');
+        
+        if (refreshServicesBtn) {
+            refreshServicesBtn.addEventListener('click', function() {
+                // Show loading spinner
+                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+                this.disabled = true;
+                
+                // Simulate refresh after a delay
+                setTimeout(() => {
+                    // Show notification
+                    showNotification('Services refreshed successfully!', 'info');
+                    
+                    // Reset button
+                    this.innerHTML = '<i class="fas fa-sync me-1"></i> Refresh';
+                    this.disabled = false;
+                }, 1500);
+            });
+        }
+    });
+</script>
+{% endblock %}
