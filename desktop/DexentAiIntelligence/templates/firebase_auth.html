@@ -1,0 +1,195 @@
+{% macro firebase_scripts() %}
+<!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<!-- Add Firebase Auth -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "{{ firebase_api_key }}",
+        authDomain: "{{ firebase_project_id }}.firebaseapp.com",
+        projectId: "{{ firebase_project_id }}",
+        storageBucket: "{{ firebase_project_id }}.appspot.com",
+        appId: "{{ firebase_app_id }}"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Setup Google auth provider
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+    // Handle Google signin
+    function signInWithGoogle() {
+        auth.signInWithPopup(googleProvider)
+            .then((result) => {
+                // Get user info
+                const user = result.user;
+                // Send token to backend
+                sendAuthDataToBackend(user, 'google');
+            }).catch((error) => {
+                console.error("Google sign-in error:", error);
+                alert("Error signing in with Google: " + error.message);
+            });
+    }
+
+    // For Google Login button
+    document.addEventListener('DOMContentLoaded', function() {
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        if (googleLoginBtn) {
+            googleLoginBtn.addEventListener('click', signInWithGoogle);
+        }
+
+        const googleRegisterBtn = document.getElementById('googleRegisterBtn');
+        if (googleRegisterBtn) {
+            googleRegisterBtn.addEventListener('click', signInWithGoogle);
+        }
+    });
+
+    // Handle phone authentication
+    function setupPhoneAuth() {
+        // Phone auth UI
+        const phoneStep1 = document.getElementById('phoneStep1');
+        const phoneStep2 = document.getElementById('phoneStep2');
+        const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+        const sendVerificationCodeBtn = document.getElementById('sendVerificationCodeBtn');
+        
+        let verificationId = null;
+        
+        // Send verification code
+        if (sendVerificationCodeBtn) {
+            sendVerificationCodeBtn.addEventListener('click', function() {
+                const phoneNumber = '+' + document.getElementById('phoneNumber').value.trim();
+                
+                if (!phoneNumber || phoneNumber === '+') {
+                    alert('Please enter a valid phone number');
+                    return;
+                }
+                
+                // Show loading state
+                sendVerificationCodeBtn.disabled = true;
+                sendVerificationCodeBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
+                
+                // Setup reCAPTCHA verifier
+                const appVerifier = new firebase.auth.RecaptchaVerifier('sendVerificationCodeBtn', {
+                    'size': 'invisible'
+                });
+                
+                // Send verification code
+                auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+                    .then((confirmationResult) => {
+                        // SMS sent
+                        verificationId = confirmationResult;
+                        
+                        // Show verification code input
+                        phoneStep1.style.display = 'none';
+                        phoneStep2.style.display = 'block';
+                        
+                        // Reset button
+                        sendVerificationCodeBtn.disabled = false;
+                        sendVerificationCodeBtn.innerHTML = 'Send Verification Code';
+                    }).catch((error) => {
+                        console.error("Phone auth error:", error);
+                        alert("Error sending verification code: " + error.message);
+                        
+                        // Reset button
+                        sendVerificationCodeBtn.disabled = false;
+                        sendVerificationCodeBtn.innerHTML = 'Send Verification Code';
+                        
+                        // Reset reCAPTCHA
+                        appVerifier.clear();
+                    });
+            });
+        }
+        
+        // Verify code
+        if (verifyCodeBtn) {
+            verifyCodeBtn.addEventListener('click', function() {
+                const verificationCode = document.getElementById('verificationCode').value.trim();
+                
+                if (!verificationCode) {
+                    alert('Please enter the verification code');
+                    return;
+                }
+                
+                // Show loading state
+                verifyCodeBtn.disabled = true;
+                verifyCodeBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Verifying...';
+                
+                // Verify code
+                verificationId.confirm(verificationCode)
+                    .then((result) => {
+                        // User signed in
+                        const user = result.user;
+                        
+                        // Send token to backend
+                        sendAuthDataToBackend(user, 'phone');
+                        
+                        // Reset button
+                        verifyCodeBtn.disabled = false;
+                        verifyCodeBtn.innerHTML = 'Verify Code';
+                    }).catch((error) => {
+                        console.error("Verification error:", error);
+                        alert("Error verifying code: " + error.message);
+                        
+                        // Reset button
+                        verifyCodeBtn.disabled = false;
+                        verifyCodeBtn.innerHTML = 'Verify Code';
+                    });
+            });
+        }
+    }
+
+    // Send auth data to backend
+    function sendAuthDataToBackend(user, provider) {
+        // Get token
+        user.getIdToken(true)
+            .then(token => {
+                // Create data object
+                const data = {
+                    token: token,
+                    email: user.email,
+                    name: user.displayName,
+                    phone: user.phoneNumber
+                };
+                
+                // Send data to appropriate endpoint
+                const endpoint = provider === 'google' ? '/auth/google' : '/auth/phone';
+                
+                // Make API call
+                fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to dashboard or specified redirect URL
+                        window.location.href = data.redirect || '/dashboard';
+                    } else {
+                        alert(data.message || 'Authentication error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending auth data to backend:', error);
+                    alert('Error authenticating: ' + error.message);
+                });
+            });
+    }
+
+    // Initialize phone auth when modal is shown
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneLoginModal = document.getElementById('phoneLoginModal');
+        if (phoneLoginModal) {
+            phoneLoginModal.addEventListener('shown.bs.modal', function () {
+                setupPhoneAuth();
+            });
+        }
+    });
+</script>
+{% endmacro %}
