@@ -1,0 +1,219 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <h1 class="fw-bold mb-4">Download Dexent.ai for iOS</h1>
+            <p class="lead mb-5">Enhance your voice on iPhone and iPad with our sleek, powerful iOS application.</p>
+            
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-5">
+                <div class="row align-items-center">
+                    <div class="col-md-8 text-md-start text-center">
+                        <h3 class="fw-bold mb-2">Dexent.ai for iOS</h3>
+                        <p class="text-muted mb-0">Version 1.0.2 | 22 MB | iOS 14.0+</p>
+                    </div>
+                    <div class="col-md-4 text-md-end text-center mt-3 mt-md-0">
+                        <a href="#" class="btn btn-primary btn-lg rounded-pill px-4" onclick="openAppStore()">
+                            <i class="fab fa-app-store me-2"></i> App Store
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm rounded-4 text-center p-5">
+                        <img src="/static/assets/appstore-badge.svg" alt="Download on the App Store" class="img-fluid mx-auto mb-4" style="max-width: 200px;" onerror="this.src='https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg'">
+                        <h4 class="fw-bold mb-3">Available on the App Store</h4>
+                        <p class="mb-4">Get the official Dexent.ai app for iPhone and iPad from the Apple App Store.</p>
+                        <a href="#" class="btn btn-primary rounded-pill px-4 mx-auto" style="max-width: 200px;" onclick="openAppStore()">
+                            <i class="fab fa-apple me-2"></i> Open App Store
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-sliders-h fa-3x text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Noise Reduction</h5>
+                            <p class="text-muted small mb-0">Clear background noise during FaceTime and voice messages.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-language fa-3x text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Accent Transformation</h5>
+                            <p class="text-muted small mb-0">Convert your accent in real-time on all iOS apps.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-lock fa-3x text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Privacy-Focused</h5>
+                            <p class="text-muted small mb-0">Process audio locally on your device with optional cloud sync.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-6 mb-4 mb-md-0">
+                                <img src="/static/assets/ios-mockup.png" alt="Dexent.ai on iOS" class="img-fluid rounded-4" onerror="this.src='/static/assets/demo-screen.svg'">
+                            </div>
+                            <div class="col-md-6 text-md-start text-center">
+                                <h3 class="fw-bold mb-3">Beautiful on iOS</h3>
+                                <p class="mb-4">Our iOS app is designed with Apple's Human Interface Guidelines in mind, offering a beautiful, intuitive experience that feels right at home on your iPhone or iPad.</p>
+                                <div class="d-flex flex-wrap gap-2 justify-content-md-start justify-content-center">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">iPhone</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">iPad</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">Dark Mode</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">iCloud Sync</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="fw-bold mb-4">Key Features</h2>
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle fa-2x text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3 text-start">
+                                    <h5 class="fw-bold mb-2">Real-time Voice Enhancement</h5>
+                                    <p class="text-muted small mb-0">Enhance your voice in real-time during calls, meetings, and voice recordings.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle fa-2x text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3 text-start">
+                                    <h5 class="fw-bold mb-2">App Integration</h5>
+                                    <p class="text-muted small mb-0">Works with FaceTime, Zoom, WhatsApp, and other communication apps.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle fa-2x text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3 text-start">
+                                    <h5 class="fw-bold mb-2">iCloud Sync</h5>
+                                    <p class="text-muted small mb-0">Sync your settings and voice samples across all your Apple devices.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle fa-2x text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3 text-start">
+                                    <h5 class="fw-bold mb-2">Energy Efficient</h5>
+                                    <p class="text-muted small mb-0">Optimized to use minimal battery while running in the background.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="fw-bold mb-4">Device Requirements</h2>
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-5">
+                <ul class="text-start mb-0">
+                    <li class="mb-2">iPhone, iPad, or iPod touch running iOS 14.0 or later</li>
+                    <li class="mb-2">100MB free storage space</li>
+                    <li class="mb-2">Working microphone and speakers</li>
+                    <li>Internet connection for cloud-based features and iCloud sync</li>
+                </ul>
+            </div>
+            
+            <div class="alert alert-info rounded-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle fa-2x"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3 text-start">
+                        <h5 class="fw-bold">Looking for other platforms?</h5>
+                        <p class="mb-2">Dexent.ai is also available for Windows and Android devices.</p>
+                        <div class="d-flex gap-2">
+                            <a href="/download/windows" class="btn btn-outline-primary rounded-pill">
+                                <i class="fab fa-windows me-1"></i> Windows
+                            </a>
+                            <a href="/download/android" class="btn btn-outline-primary rounded-pill">
+                                <i class="fab fa-android me-1"></i> Android
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- App Store Modal -->
+<div class="modal fade" id="appStoreModal" tabindex="-1" aria-labelledby="appStoreModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-body text-center p-5">
+                <i class="fab fa-apple fa-4x text-primary mb-4"></i>
+                <h3 class="fw-bold mb-3">Opening App Store</h3>
+                <p class="mb-4">You're being redirected to the App Store to download Dexent.ai for iOS.</p>
+                <a href="#" class="btn btn-primary rounded-pill px-4">
+                    <i class="fab fa-apple me-2"></i> Open App Store
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function openAppStore() {
+        // In a real application, this would redirect to the App Store
+        // For demo purposes, just show the modal
+        const modal = new bootstrap.Modal(document.getElementById('appStoreModal'));
+        modal.show();
+        
+        // Simulate redirection after a brief delay
+        setTimeout(() => {
+            // This would be a real App Store link in production
+            // window.location.href = 'https://apps.apple.com/app/idXXXXXXXXXX';
+            console.log('Redirecting to App Store...');
+        }, 2000);
+    }
+</script>
+{% endblock %}
