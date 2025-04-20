@@ -1,0 +1,260 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <h1 class="fw-bold mb-4">Download Dexent.ai for Android</h1>
+            <p class="lead mb-5">Transform your voice on-the-go with our Android app featuring real-time audio enhancement.</p>
+            
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-5">
+                <div class="row align-items-center">
+                    <div class="col-md-8 text-md-start text-center">
+                        <h3 class="fw-bold mb-2">Dexent.ai Mobile</h3>
+                        <p class="text-muted mb-0">Version 1.0.2 | 18 MB | Android 8.0+</p>
+                    </div>
+                    <div class="col-md-4 text-md-end text-center mt-3 mt-md-0">
+                        <a href="#" class="btn btn-primary btn-lg rounded-pill px-4" onclick="showDownloadOptions()">
+                            <i class="fas fa-download me-2"></i> Download Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-body text-center p-4">
+                            <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" class="img-fluid mb-3" style="max-width: 200px;">
+                            <p class="mb-0">Download from the official Google Play Store</p>
+                            <a href="#" class="btn btn-outline-primary rounded-pill mt-3">
+                                <i class="fab fa-google-play me-2"></i> Open Google Play
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-download fa-4x text-primary mb-3"></i>
+                            <p class="mb-0">Download the APK file directly</p>
+                            <a href="#" class="btn btn-outline-primary rounded-pill mt-3" onclick="startDirectDownload()">
+                                <i class="fas fa-file-download me-2"></i> Download APK
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-sliders-h fa-3x text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Noise Reduction</h5>
+                            <p class="text-muted small mb-0">Clear background noise during calls and voice messages.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-language fa-3x text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Accent Transformation</h5>
+                            <p class="text-muted small mb-0">Convert your accent in real-time during video calls.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">App Integration</h5>
+                            <p class="text-muted small mb-0">Works with popular communication apps like WhatsApp and Zoom.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-6 mb-4 mb-md-0">
+                                <img src="/static/assets/android-mockup.png" alt="Dexent.ai on Android" class="img-fluid rounded-4" onerror="this.src='/static/assets/demo-screen.svg'">
+                            </div>
+                            <div class="col-md-6 text-md-start text-center">
+                                <h3 class="fw-bold mb-3">Enhance Your Voice on Android</h3>
+                                <p class="mb-4">Our Android app brings the power of Dexent.ai's voice enhancement technology to your mobile device. Transform your voice during calls, meetings, and voice messages with just a tap.</p>
+                                <div class="d-flex flex-wrap gap-2 justify-content-md-start justify-content-center">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">Video Calls</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">Voice Messages</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">Social Media</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">Voice Recording</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="fw-bold mb-4">Installation Instructions</h2>
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-5">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100 border-0 bg-primary bg-opacity-10 rounded-4 p-4">
+                                    <h5 class="fw-bold mb-3">Google Play Installation</h5>
+                                    <ol class="text-start mb-0">
+                                        <li class="mb-2">Open Google Play Store on your Android device</li>
+                                        <li class="mb-2">Search for "Dexent.ai"</li>
+                                        <li class="mb-2">Tap "Install"</li>
+                                        <li>Open the app and sign in</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100 border-0 bg-primary bg-opacity-10 rounded-4 p-4">
+                                    <h5 class="fw-bold mb-3">APK Installation</h5>
+                                    <ol class="text-start mb-0">
+                                        <li class="mb-2">Download the APK file to your device</li>
+                                        <li class="mb-2">Enable "Install from Unknown Sources" in your settings</li>
+                                        <li class="mb-2">Open the downloaded APK file</li>
+                                        <li>Follow the on-screen instructions</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="alert alert-info mb-0 text-start">
+                                    <i class="fas fa-info-circle me-2"></i> For best performance, allow Dexent.ai to access your microphone and run in the background.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="fw-bold mb-4">Device Requirements</h2>
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-5">
+                <ul class="text-start mb-0">
+                    <li class="mb-2">Android 8.0 (Oreo) or newer</li>
+                    <li class="mb-2">2GB RAM minimum (4GB recommended)</li>
+                    <li class="mb-2">100MB free storage space</li>
+                    <li class="mb-2">Working microphone and speakers</li>
+                    <li>Internet connection for cloud-based features</li>
+                </ul>
+            </div>
+            
+            <div class="alert alert-info rounded-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle fa-2x"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3 text-start">
+                        <h5 class="fw-bold">Looking for other platforms?</h5>
+                        <p class="mb-2">Dexent.ai is also available for Windows and iOS devices.</p>
+                        <div class="d-flex gap-2">
+                            <a href="/download/windows" class="btn btn-outline-primary rounded-pill">
+                                <i class="fab fa-windows me-1"></i> Windows
+                            </a>
+                            <a href="/download/ios" class="btn btn-outline-primary rounded-pill">
+                                <i class="fab fa-apple me-1"></i> iOS
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Download Options Modal -->
+<div class="modal fade" id="downloadOptionsModal" tabindex="-1" aria-labelledby="downloadOptionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold" id="downloadOptionsModalLabel">Choose Download Option</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="card border-0 bg-light rounded-4 p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Google Play" style="width: 120px;">
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="fw-bold mb-1">Google Play Store</h6>
+                                    <p class="text-muted small mb-2">Recommended download method</p>
+                                    <a href="#" class="btn btn-primary btn-sm rounded-pill">
+                                        <i class="fab fa-google-play me-1"></i> Open Google Play
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card border-0 bg-light rounded-4 p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-file-download fa-3x text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="fw-bold mb-1">Direct APK Download</h6>
+                                    <p class="text-muted small mb-2">Latest version: 1.0.2 (18MB)</p>
+                                    <a href="#" class="btn btn-primary btn-sm rounded-pill" onclick="startDirectDownload(); $('#downloadOptionsModal').modal('hide');">
+                                        <i class="fas fa-download me-1"></i> Download APK
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Direct Download Started Modal -->
+<div class="modal fade" id="directDownloadModal" tabindex="-1" aria-labelledby="directDownloadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-body text-center p-5">
+                <i class="fas fa-download fa-4x text-primary mb-4"></i>
+                <h3 class="fw-bold mb-3">Your download is starting!</h3>
+                <p class="mb-4">Thank you for downloading Dexent.ai for Android. If your download doesn't start automatically, click the button below.</p>
+                <a href="#" class="btn btn-primary rounded-pill px-4">
+                    <i class="fas fa-download me-2"></i> Download Again
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function showDownloadOptions() {
+        const modal = new bootstrap.Modal(document.getElementById('downloadOptionsModal'));
+        modal.show();
+    }
+    
+    function startDirectDownload() {
+        // In a real application, this would trigger the actual file download
+        // For demo purposes, just show the modal
+        const downloadModal = new bootstrap.Modal(document.getElementById('directDownloadModal'));
+        downloadModal.show();
+        
+        // Simulate download starting after a brief delay
+        setTimeout(() => {
+            // This would be a real download link in production
+            const link = document.createElement('a');
+            link.href = '#';  // Replace with actual file URL
+            link.download = 'Dexent-Android.apk';
+            link.click();
+        }, 1500);
+    }
+</script>
+{% endblock %}
