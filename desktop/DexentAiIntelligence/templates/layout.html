@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dexent.ai - Voice Enhancement & Accent Conversion{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Import Firebase Auth Scripts -->
+    {% from 'firebase_auth.html' import firebase_scripts %}
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-microphone-alt me-2"></i> Dexent.ai
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/accent">Accent Selection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/settings">Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Register</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-primary rounded-pill" href="/download/windows">
+                            <i class="fas fa-download me-1"></i> Download
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="py-5 mt-5 border-top border-secondary">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <a class="navbar-brand mb-3 d-block" href="/">
+                        <i class="fas fa-microphone-alt me-2"></i> Dexent.ai
+                    </a>
+                    <p class="text-muted mb-4">Advanced AI-powered voice enhancement with accent conversion that preserves your identity.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-linkedin fa-lg"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="mb-3 fw-bold">Product</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="/features" class="nav-link p-0 text-muted">Features</a></li>
+                        <li class="nav-item mb-2"><a href="/pricing" class="nav-link p-0 text-muted">Pricing</a></li>
+                        <li class="nav-item mb-2"><a href="/download/windows" class="nav-link p-0 text-muted">Windows</a></li>
+                        <li class="nav-item mb-2"><a href="/download/android" class="nav-link p-0 text-muted">Android</a></li>
+                        <li class="nav-item mb-2"><a href="/download/ios" class="nav-link p-0 text-muted">iOS</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="mb-3 fw-bold">Company</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="/about" class="nav-link p-0 text-muted">About Us</a></li>
+                        <li class="nav-item mb-2"><a href="/careers" class="nav-link p-0 text-muted">Careers</a></li>
+                        <li class="nav-item mb-2"><a href="/blog" class="nav-link p-0 text-muted">Blog</a></li>
+                        <li class="nav-item mb-2"><a href="/press" class="nav-link p-0 text-muted">Press</a></li>
+                        <li class="nav-item mb-2"><a href="/contact" class="nav-link p-0 text-muted">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="mb-3 fw-bold">Support</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="/help" class="nav-link p-0 text-muted">Help Center</a></li>
+                        <li class="nav-item mb-2"><a href="/docs" class="nav-link p-0 text-muted">Documentation</a></li>
+                        <li class="nav-item mb-2"><a href="/community" class="nav-link p-0 text-muted">Community</a></li>
+                        <li class="nav-item mb-2"><a href="/status" class="nav-link p-0 text-muted">Status</a></li>
+                        <li class="nav-item mb-2"><a href="/faq" class="nav-link p-0 text-muted">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="mb-3 fw-bold">Legal</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="/terms" class="nav-link p-0 text-muted">Terms of Service</a></li>
+                        <li class="nav-item mb-2"><a href="/privacy" class="nav-link p-0 text-muted">Privacy Policy</a></li>
+                        <li class="nav-item mb-2"><a href="/cookies" class="nav-link p-0 text-muted">Cookie Policy</a></li>
+                        <li class="nav-item mb-2"><a href="/security" class="nav-link p-0 text-muted">Security</a></li>
+                        <li class="nav-item mb-2"><a href="/licensing" class="nav-link p-0 text-muted">Licensing</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center flex-column flex-md-row mt-4 pt-4 border-top">
+                <p class="text-muted">© 2025 Dexent.ai. All rights reserved.</p>
+                <div>
+                    <a href="/terms" class="text-muted me-3">Terms</a>
+                    <a href="/privacy" class="text-muted me-3">Privacy</a>
+                    <a href="/cookies" class="text-muted">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title fw-bold" id="loginModalLabel">Log In</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="d-grid gap-3 mb-4">
+                        <button class="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 rounded-pill" id="googleLoginBtn">
+                            <i class="fab fa-google"></i> Continue with Google
+                        </button>
+                        <button class="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#phoneLoginModal" data-bs-dismiss="modal">
+                            <i class="fas fa-phone"></i> Continue with Phone
+                        </button>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="flex-grow-1 border-top"></div>
+                        <div class="mx-3 text-muted">or</div>
+                        <div class="flex-grow-1 border-top"></div>
+                    </div>
+                    
+                    <form action="/login" method="post">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="loginEmail" name="email" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" name="password" required>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberMe" name="remember">
+                                <label class="form-check-label" for="rememberMe">
+                                    Remember me
+                                </label>
+                            </div>
+                            <a href="/reset-password" class="text-decoration-none">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill mb-3">Log In</button>
+                    </form>
+                    
+                    <p class="text-center mb-0">
+                        Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Sign up</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title fw-bold" id="registerModalLabel">Create an Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="d-grid gap-3 mb-4">
+                        <button class="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 rounded-pill" id="googleRegisterBtn">
+                            <i class="fab fa-google"></i> Continue with Google
+                        </button>
+                        <button class="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#phoneLoginModal" data-bs-dismiss="modal">
+                            <i class="fas fa-phone"></i> Continue with Phone
+                        </button>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="flex-grow-1 border-top"></div>
+                        <div class="mx-3 text-muted">or</div>
+                        <div class="flex-grow-1 border-top"></div>
+                    </div>
+                    
+                    <form action="/register" method="post">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="registerName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="registerEmail" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="registerPassword" name="password" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="registerConfirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="registerConfirmPassword" name="confirm_password" required>
+                        </div>
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="agreeTerms" name="terms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill mb-3">Create Account</button>
+                    </form>
+                    
+                    <p class="text-center mb-0">
+                        Already have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Log in</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phone Login Modal -->
+    <div class="modal fade" id="phoneLoginModal" tabindex="-1" aria-labelledby="phoneLoginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title fw-bold" id="phoneLoginModalLabel">Phone Authentication</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div id="phoneStep1">
+                        <p class="text-muted mb-4">Enter your phone number to receive a verification code.</p>
+                        <div class="mb-4">
+                            <label for="phoneNumber" class="form-label">Phone Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text">+</span>
+                                <input type="tel" class="form-control" id="phoneNumber" placeholder="1XXXXXXXXXX" required>
+                            </div>
+                            <div class="form-text">Include country code (e.g., +1 for US)</div>
+                        </div>
+                        <button type="button" class="btn btn-primary w-100 rounded-pill mb-3" id="sendVerificationCodeBtn">Send Verification Code</button>
+                    </div>
+                    
+                    <div id="phoneStep2" style="display: none;">
+                        <p class="text-muted mb-4">Enter the 6-digit verification code sent to your phone.</p>
+                        <div class="mb-4">
+                            <label for="verificationCode" class="form-label">Verification Code</label>
+                            <input type="text" class="form-control" id="verificationCode" placeholder="Enter 6-digit code" required>
+                        </div>
+                        <button type="button" class="btn btn-primary w-100 rounded-pill mb-3" id="verifyCodeBtn">Verify and Continue</button>
+                        <p class="text-center">
+                            <a href="#" id="resendCodeBtn">Resend Code</a> | 
+                            <a href="#" id="changePhoneBtn">Change Phone Number</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    
+    <script>
+    // Initialize Firebase with your project config
+    const firebaseConfig = {
+        apiKey: "{{ firebase_api_key }}",
+        projectId: "{{ firebase_project_id }}",
+        appId: "{{ firebase_app_id }}",
+        authDomain: "{{ firebase_project_id }}.firebaseapp.com",
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Google Login
+    document.getElementById('googleLoginBtn').addEventListener('click', function() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                // Get the Google access token
+                const credential = result.credential;
+                const token = credential.accessToken;
+                const user = result.user;
+                
+                // POST to server to create session
+                fetch('/auth/google', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: user.uid,
+                        email: user.email,
+                        name: user.displayName
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/dashboard';
+                    }
+                });
+            }).catch((error) => {
+                console.error("Google login error:", error);
+                alert("Error signing in with Google: " + error.message);
+            });
+    });
+    
+    // Google Registration
+    document.getElementById('googleRegisterBtn').addEventListener('click', function() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                // Get the Google access token
+                const credential = result.credential;
+                const token = credential.accessToken;
+                const user = result.user;
+                
+                // POST to server to create account and session
+                fetch('/auth/google/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: user.uid,
+                        email: user.email,
+                        name: user.displayName
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/dashboard';
+                    }
+                });
+            }).catch((error) => {
+                console.error("Google registration error:", error);
+                alert("Error registering with Google: " + error.message);
+            });
+    });
+    
+    // Phone Authentication
+    document.getElementById('sendVerificationCodeBtn').addEventListener('click', function() {
+        const phoneNumber = '+' + document.getElementById('phoneNumber').value.replace(/\+/g, '');
+        
+        // Initialize phone number authentication
+        const appVerifier = new firebase.auth.RecaptchaVerifier('sendVerificationCodeBtn', {
+            'size': 'invisible',
+            'callback': (response) => {
+                // reCAPTCHA solved, allow signInWithPhoneNumber.
+            }
+        });
+        
+        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+            .then((confirmationResult) => {
+                // SMS sent. Prompt user to type the code from the message
+                window.confirmationResult = confirmationResult;
+                
+                // Show verification code step
+                document.getElementById('phoneStep1').style.display = 'none';
+                document.getElementById('phoneStep2').style.display = 'block';
+            }).catch((error) => {
+                console.error("SMS verification error:", error);
+                alert("Error sending verification code: " + error.message);
+                appVerifier.clear();
+            });
+    });
+    
+    // Verify Phone Code
+    document.getElementById('verifyCodeBtn').addEventListener('click', function() {
+        const code = document.getElementById('verificationCode').value;
+        
+        if (!window.confirmationResult) {
+            alert("Please request a verification code first");
+            return;
+        }
+        
+        window.confirmationResult.confirm(code)
+            .then((result) => {
+                // User signed in successfully
+                const user = result.user;
+                
+                // POST to server to create session
+                fetch('/auth/phone', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: user.uid,
+                        phone: user.phoneNumber,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/dashboard';
+                    }
+                });
+            }).catch((error) => {
+                console.error("Code verification error:", error);
+                alert("Error verifying code: " + error.message);
+            });
+    });
+    
+    // Change Phone Number
+    document.getElementById('changePhoneBtn').addEventListener('click', function() {
+        document.getElementById('phoneStep1').style.display = 'block';
+        document.getElementById('phoneStep2').style.display = 'none';
+    });
+    
+    // Resend Code
+    document.getElementById('resendCodeBtn').addEventListener('click', function() {
+        document.getElementById('phoneStep1').style.display = 'block';
+        document.getElementById('phoneStep2').style.display = 'none';
+    });
+    </script>
+    
+    <!-- Custom JavaScript -->
+    <script src="/static/js/app.js"></script>
+    
+    <!-- Firebase Authentication -->
+    {{ firebase_scripts() }}
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>
