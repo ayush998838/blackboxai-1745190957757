@@ -1,0 +1,382 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<!-- Hero Section with Gradient Background -->
+<div class="hero-section py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
+                <h1 class="display-4 fw-bold text-white mb-3">Transform Your Voice <span class="gradient-text">Instantly</span></h1>
+                <p class="lead text-white-75 mb-4">
+                    Advanced AI-powered voice enhancement with accent conversion that preserves your identity.
+                    Clean up background noise, adjust your accent, and sound professional in any environment.
+                </p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-lg-start justify-content-center">
+                    {% if current_user.is_authenticated %}
+                        <a href="/dashboard" class="btn btn-primary btn-lg px-4 me-2">
+                            <i class="fas fa-tachometer-alt me-2"></i> Go to Dashboard
+                        </a>
+                        <a href="/download/windows" class="btn btn-outline-light btn-lg px-4">
+                            <i class="fas fa-download me-2"></i> Download
+                        </a>
+                    {% else %}
+                        <button type="button" class="btn btn-primary btn-lg px-4 me-2" data-bs-toggle="modal" data-bs-target="#registerModal">Get Started Free</button>
+                        <button type="button" class="btn btn-outline-light btn-lg px-4" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image-container text-center">
+                    <img src="/static/assets/hero-image.svg" alt="Dexent.ai Voice Enhancement" class="img-fluid hero-image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container mb-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Powerful Voice Enhancement Features</h2>
+        <p class="lead text-muted">Transform your voice with advanced AI technology</p>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 feature-card">
+                <div class="card-body text-center p-4">
+                    <div class="icon bg-primary bg-opacity-10 mb-3 mx-auto rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="fas fa-filter fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Noise Suppression</h4>
+                    <p class="text-muted mb-0">Remove background noise, keyboard typing, fans, and room echo in real-time.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 feature-card">
+                <div class="card-body text-center p-4">
+                    <div class="icon bg-primary bg-opacity-10 mb-3 mx-auto rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="fas fa-language fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Accent Conversion</h4>
+                    <p class="text-muted mb-0">Convert your accent to American, British, or Australian English while preserving your voice identity.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 feature-card">
+                <div class="card-body text-center p-4">
+                    <div class="icon bg-primary bg-opacity-10 mb-3 mx-auto rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="fas fa-fingerprint fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Identity Preservation</h4>
+                    <p class="text-muted mb-0">Keep your unique voice characteristics during accent conversion with our identity preservation technology.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Demo Section -->
+<div class="bg-primary bg-opacity-5 py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="fw-bold mb-3">See Dexent.ai in Action</h2>
+                <p class="lead mb-4">Watch how Dexent.ai transforms your voice in real-time. Clean up background noise, convert your accent, and enhance your vocal presence.</p>
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <img src="/static/assets/demo-screen.svg" alt="Dexent.ai Demo" class="img-fluid">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-3">Try Now With Sample Audio</h3>
+                        
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-2">Original Audio</h6>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm btn-primary rounded-circle me-2">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <div class="flex-grow-1">
+                                    <div class="progress">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <span class="ms-2 small">0:00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-2">Noise Suppression</h6>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm btn-primary rounded-circle me-2">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <div class="flex-grow-1">
+                                    <div class="progress">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <span class="ms-2 small">0:00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-2">Accent Conversion</h6>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm btn-primary rounded-circle me-2">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <div class="flex-grow-1">
+                                    <div class="progress">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <span class="ms-2 small">0:00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#registerModal">
+                                <i class="fas fa-rocket me-2"></i> Try With Your Voice
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="container mb-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">What Our Users Say</h2>
+        <p class="lead text-muted">Hear from professionals who use Dexent.ai every day</p>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex mb-3">
+                        <div class="flex-shrink-0">
+                            <img src="/static/assets/default-avatar.svg" alt="User Avatar" width="50" height="50" class="rounded-circle">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="fw-bold mb-0">Sarah Johnson</h5>
+                            <p class="text-muted small mb-0">Software Engineer</p>
+                        </div>
+                    </div>
+                    <p class="mb-0">Dexent.ai has been a game-changer for my remote work. My teammates can finally understand me clearly during our international meetings.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex mb-3">
+                        <div class="flex-shrink-0">
+                            <img src="/static/assets/default-avatar.svg" alt="User Avatar" width="50" height="50" class="rounded-circle">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="fw-bold mb-0">Michael Chen</h5>
+                            <p class="text-muted small mb-0">Content Creator</p>
+                        </div>
+                    </div>
+                    <p class="mb-0">As a YouTube creator, audio quality is everything. Dexent.ai removes all the background noise from my recordings while keeping my voice sounding natural.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex mb-3">
+                        <div class="flex-shrink-0">
+                            <img src="/static/assets/default-avatar.svg" alt="User Avatar" width="50" height="50" class="rounded-circle">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="fw-bold mb-0">Elena Rodriguez</h5>
+                            <p class="text-muted small mb-0">ESL Teacher</p>
+                        </div>
+                    </div>
+                    <p class="mb-0">The accent conversion feature helps my students understand me better. I can switch between different English accents to help them learn pronunciation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Download CTA Section -->
+<div class="bg-primary bg-opacity-10 py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                <h2 class="fw-bold mb-3">Ready to Transform Your Voice?</h2>
+                <p class="lead mb-4">Download Dexent.ai now and experience professional-quality voice enhancement in real-time. Available for Windows, Android, and iOS.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/download/windows" class="btn btn-primary rounded-pill px-4">
+                        <i class="fab fa-windows me-2"></i> Windows
+                    </a>
+                    <a href="/download/android" class="btn btn-outline-primary rounded-pill px-4">
+                        <i class="fab fa-android me-2"></i> Android
+                    </a>
+                    <a href="/download/ios" class="btn btn-outline-primary rounded-pill px-4">
+                        <i class="fab fa-apple me-2"></i> iOS
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 bg-primary bg-opacity-10 p-4">
+                    <div class="card-body text-center">
+                        <h4 class="fw-bold mb-3">Key Features:</h4>
+                        <ul class="list-unstyled mb-4">
+                            <li class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check-circle text-primary me-2"></i>
+                                <span>Real-time noise suppression</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check-circle text-primary me-2"></i>
+                                <span>Accent conversion with identity preservation</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check-circle text-primary me-2"></i>
+                                <span>Works with all your favorite apps</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check-circle text-primary me-2"></i>
+                                <span>Low CPU usage</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check-circle text-primary me-2"></i>
+                                <span>Cross-platform sync</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Section -->
+<div class="container mb-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Frequently Asked Questions</h2>
+        <p class="lead text-muted">Got questions? We've got answers.</p>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item border-0 shadow-sm rounded-4 mb-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button rounded-4 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            How does Dexent.ai work?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Dexent.ai uses advanced AI models to process your audio in real-time. For noise suppression, we identify and remove unwanted sounds while preserving your voice. For accent conversion, we use speech recognition to understand what you're saying, then resynthesize your voice with the target accent while maintaining your unique voice characteristics.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item border-0 shadow-sm rounded-4 mb-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button rounded-4 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            What applications does Dexent.ai work with?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Dexent.ai works with virtually all applications that use your microphone. This includes Zoom, Microsoft Teams, Google Meet, Discord, Skype, and any other communication or recording applications. It works by creating a virtual audio device that applications can use as their input source.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item border-0 shadow-sm rounded-4 mb-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button rounded-4 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Does Dexent.ai work offline?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, Dexent.ai can work completely offline. All audio processing happens locally on your device. However, some advanced features like cloud synchronization of settings and voice samples require an internet connection.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item border-0 shadow-sm rounded-4 mb-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button rounded-4 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            How do I preserve my voice identity during accent conversion?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Dexent.ai's identity preservation technology works by analyzing your voice characteristics and applying them to the synthesized output. For best results, we recommend recording a short voice sample that our system can use to learn your unique vocal traits. This helps ensure that even with a different accent, the voice still sounds like you.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item border-0 shadow-sm rounded-4">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button rounded-4 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                            Is my audio data secure?
+                        </button>
+                    </h2>
+                    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, your privacy is our top priority. All audio processing happens locally on your device, and your voice data is never stored or sent to our servers without your explicit consent. If you choose to use cloud features, all data transmission is encrypted using industry-standard protocols, and you can delete your data at any time.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize play buttons to simulate audio playback
+        const playButtons = document.querySelectorAll('.btn-play');
+        playButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const progressBar = this.closest('.d-flex').querySelector('.progress-bar');
+                const timeDisplay = this.closest('.d-flex').querySelector('span');
+                
+                // Reset animation
+                progressBar.style.transition = 'none';
+                progressBar.style.width = '0%';
+                
+                // Force reflow
+                void progressBar.offsetWidth;
+                
+                // Start animation
+                progressBar.style.transition = 'width 20s linear';
+                progressBar.style.width = '100%';
+                
+                // Simulate time update
+                let seconds = 0;
+                const interval = setInterval(() => {
+                    seconds++;
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    timeDisplay.textContent = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+                    
+                    if (seconds >= 20) {
+                        clearInterval(interval);
+                    }
+                }, 1000);
+            });
+        });
+    });
+</script>
+{% endblock %}
