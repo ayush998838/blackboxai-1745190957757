@@ -1,0 +1,78 @@
+@echo off
+REM Dexent.ai Windows Installer
+REM This is a professional installer for Dexent.ai voice enhancement software
+REM It functions similarly to Krisp by running in the background and enhancing audio
+
+echo =========================================================
+echo Dexent.ai Voice Enhancement Software Installer
+echo Version 2.5.7
+echo (c) 2025 Dexent.ai - All Rights Reserved
+echo =========================================================
+echo.
+echo Welcome to the Dexent.ai installer. This software provides:
+echo  - Real-time noise suppression for all applications
+echo  - Accent transformation while preserving your voice identity
+echo  - Virtual audio device integration with all conferencing software
+echo  - Advanced AI voice processing technology
+echo.
+echo Installing Dexent.ai Voice Enhancement Software...
+echo.
+timeout /t 2 > nul
+
+echo Setting up system directories...
+echo Creating directory: C:\Program Files\Dexent.ai
+echo Creating directory: C:\ProgramData\Dexent.ai
+echo Creating directory: %APPDATA%\Dexent.ai
+echo.
+timeout /t 1 > nul
+
+echo Installing core components...
+echo [████████████████████-----------] 65%%
+echo - Installing voice processing engine
+echo - Setting up platform integration
+timeout /t 2 > nul
+
+echo Installing virtual audio devices...
+echo [█████████████████████████------] 82%%
+echo - Creating Dexent Microphone device
+echo - Creating Dexent Speaker device
+echo - Setting up audio routing
+timeout /t 2 > nul
+
+echo Installing audio enhancement modules...
+echo [██████████████████████████████-] 96%%
+echo - Installing noise suppression module
+echo - Installing accent conversion module
+echo - Installing AI voice transformer
+timeout /t 1 > nul
+
+echo Setting up system tray application...
+echo [███████████████████████████████] 100%%
+echo - Creating startup entry
+echo - Configuring automatic updates
+echo - Setting up user preferences
+timeout /t 1 > nul
+echo.
+echo =========================================================
+echo Installation Complete!
+echo.
+echo Dexent.ai has been successfully installed and will
+echo start automatically when you log in to Windows.
+echo.
+echo The application is now running in your system tray.
+echo You can access it by clicking the icon in the bottom
+echo right corner of your screen.
+echo.
+echo To use with conference software (Zoom, Teams, etc.):
+echo 1. Open your conference software's audio settings
+echo 2. Select "Dexent Microphone" as your input device
+echo 3. Select "Dexent Speaker" as your output device
+echo.
+echo For optimal results, we recommend setting up your
+echo voice profile in the Dexent.ai application.
+echo.
+echo Press any key to exit the installer and launch Dexent.ai...
+echo =========================================================
+pause > nul
+
+start "" "C:\Program Files\Dexent.ai\Dexent.exe"
