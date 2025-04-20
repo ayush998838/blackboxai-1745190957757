@@ -1,0 +1,474 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h1 class="fw-bold mb-4">Accent Selection & Voice Processing</h1>
+            
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h2 class="fw-bold mb-3">Target Accent</h2>
+                    <p class="text-muted mb-4">Select the accent you'd like to transform your voice to:</p>
+                    
+                    <div class="row g-3 mb-4">
+                        {% set accents = [
+                            {'id': 'american', 'name': 'American', 'icon': 'flag-usa'},
+                            {'id': 'british', 'name': 'British', 'icon': 'flag-alt'},
+                            {'id': 'australian', 'name': 'Australian', 'icon': 'globe-oceania'},
+                            {'id': 'indian', 'name': 'Indian', 'icon': 'globe-asia'},
+                            {'id': 'spanish', 'name': 'Spanish', 'icon': 'globe-europe'},
+                            {'id': 'french', 'name': 'French', 'icon': 'globe-europe'}
+                        ] %}
+                        
+                        {% for accent in accents %}
+                        <div class="col-md-4 col-sm-6">
+                            <div class="card accent-card h-100 border {% if accent.id == user_settings.target_accent %}border-primary{% else %}border-light{% endif %} rounded-4" 
+                                data-accent="{{ accent.id }}">
+                                <div class="card-body p-3 text-center">
+                                    <i class="fas fa-{{ accent.icon }} fa-2x mb-3 {% if accent.id == user_settings.target_accent %}text-primary{% endif %}"></i>
+                                    <h5 class="fw-bold mb-0">{{ accent.name }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="identityPreservation" 
+                               {% if user_settings.identity_preservation %}checked{% endif %}>
+                        <label class="form-check-label" for="identityPreservation">
+                            Preserve my voice identity
+                        </label>
+                    </div>
+                    <p class="small text-muted">
+                        When enabled, your unique voice characteristics will be preserved while changing only the accent.
+                        When disabled, you'll sound like a native speaker with that accent.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h2 class="fw-bold mb-3">Voice Recording</h2>
+                    <p class="text-muted mb-4">Record a sample of your voice to test accent conversion:</p>
+                    
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="voice-recorder mb-4">
+                                <div class="card bg-dark text-white rounded-4 p-3 mb-3">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="recorder-status">Click to start recording</div>
+                                        <div class="recorder-time">00:00</div>
+                                    </div>
+                                    <div class="waveform my-2" id="waveform"></div>
+                                    <div class="d-flex justify-content-center">
+                                        <button id="recordButton" class="btn btn-danger rounded-circle p-3">
+                                            <i class="fas fa-microphone fa-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2" id="audioControls" style="display: none !important;">
+                                    <button class="btn btn-primary rounded-pill" id="processButton">
+                                        <i class="fas fa-wand-magic-sparkles me-2"></i> Process Recording
+                                    </button>
+                                    <button class="btn btn-outline-secondary rounded-pill" id="clearButton">
+                                        <i class="fas fa-trash me-2"></i> Clear & Record Again
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <div class="card border rounded-4 p-3 mb-3" id="resultsCard" style="display: none;">
+                                <h5 class="fw-bold mb-3">Processed Result</h5>
+                                <div class="audio-player mb-3">
+                                    <audio id="processedAudio" controls class="w-100"></audio>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-sm btn-outline-secondary" id="compareButton">
+                                        <i class="fas fa-exchange-alt me-1"></i> Compare
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-primary" id="downloadButton">
+                                        <i class="fas fa-download me-1"></i> Download
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="card bg-light rounded-4 p-3">
+                                <h5 class="fw-bold mb-2">Processing Info</h5>
+                                <div id="processingInfo">
+                                    <p class="text-muted mb-0 small">Select an accent and record your voice to see processing information.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="fw-bold mb-3">Voice Identity Profiles</h2>
+                    <p class="text-muted mb-4">Create and manage voice identity profiles for better voice preservation:</p>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="card h-100 border-dashed rounded-4 text-center new-profile-card">
+                                <div class="card-body d-flex flex-column justify-content-center p-3">
+                                    <i class="fas fa-plus-circle fa-3x text-muted mb-3"></i>
+                                    <h5 class="fw-bold mb-0">Create New Profile</h5>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% set profiles = [
+                            {'id': 1, 'name': 'My Natural Voice', 'samples': 5, 'created': '2025-04-01'},
+                            {'id': 2, 'name': 'Professional Voice', 'samples': 3, 'created': '2025-04-10'}
+                        ] %}
+                        
+                        {% for profile in profiles %}
+                        <div class="col-md-4">
+                            <div class="card h-100 border rounded-4">
+                                <div class="card-body p-3">
+                                    <h5 class="fw-bold mb-2">{{ profile.name }}</h5>
+                                    <p class="text-muted small mb-3">Created {{ profile.created }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-light text-dark rounded-pill">{{ profile.samples }} samples</span>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-link text-muted" data-bs-toggle="dropdown">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i> Edit</a></li>
+                                                <li><a class="dropdown-item" href="#"><i class="fas fa-microphone me-2"></i> Add Samples</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-trash me-2"></i> Delete</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <button class="btn btn-primary rounded-pill">
+                        <i class="fas fa-save me-2"></i> Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Profile Modal -->
+<div class="modal fade" id="newProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Create Voice Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newProfileForm">
+                    <div class="mb-3">
+                        <label for="profileName" class="form-label">Profile Name</label>
+                        <input type="text" class="form-control" id="profileName" placeholder="e.g., My Natural Voice">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Voice Samples (min 3 recommended)</label>
+                        <div class="voice-sample-recorder">
+                            <div class="card bg-dark text-white rounded-4 p-3 mb-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="recorder-status">Click to start recording</div>
+                                    <div class="recorder-time">00:00</div>
+                                </div>
+                                <div class="waveform-mini my-2"></div>
+                                <div class="d-flex justify-content-center">
+                                    <button class="btn btn-danger rounded-circle p-3 sample-record-btn">
+                                        <i class="fas fa-microphone"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sample-list">
+                            <!-- Samples will be listed here -->
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill add-sample-btn mt-2">
+                            <i class="fas fa-plus me-1"></i> Add Another Sample
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary rounded-pill" id="saveProfileBtn">Create Profile</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/wavesurfer.js@6/dist/wavesurfer.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Accent selection
+        const accentCards = document.querySelectorAll('.accent-card');
+        let selectedAccent = '{{ user_settings.target_accent }}';
+        
+        accentCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const accentId = this.dataset.accent;
+                
+                // Remove selection from all cards
+                accentCards.forEach(c => {
+                    c.classList.remove('border-primary');
+                    c.querySelector('i').classList.remove('text-primary');
+                });
+                
+                // Add selection to clicked card
+                this.classList.add('border-primary');
+                this.querySelector('i').classList.add('text-primary');
+                
+                selectedAccent = accentId;
+                
+                // Update processing info
+                updateProcessingInfo();
+            });
+        });
+        
+        // Voice recorder
+        let recorder;
+        let audioBlob;
+        let isRecording = false;
+        let recordingTimer;
+        let recordingSeconds = 0;
+        
+        const recordButton = document.getElementById('recordButton');
+        const recorderStatus = document.querySelector('.recorder-status');
+        const recorderTime = document.querySelector('.recorder-time');
+        const audioControls = document.getElementById('audioControls');
+        const processButton = document.getElementById('processButton');
+        const clearButton = document.getElementById('clearButton');
+        const resultsCard = document.getElementById('resultsCard');
+        const processedAudio = document.getElementById('processedAudio');
+        const compareButton = document.getElementById('compareButton');
+        const downloadButton = document.getElementById('downloadButton');
+        
+        // Initialize WaveSurfer
+        const wavesurfer = WaveSurfer.create({
+            container: '#waveform',
+            waveColor: '#4f5b66',
+            progressColor: '#3498db',
+            cursorColor: 'transparent',
+            barWidth: 2,
+            barGap: 1,
+            height: 60,
+            responsive: true
+        });
+        
+        // Request microphone permission
+        recordButton.addEventListener('click', function() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+        
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    recorder = new MediaRecorder(stream);
+                    
+                    const chunks = [];
+                    recorder.ondataavailable = e => chunks.push(e.data);
+                    recorder.onstop = () => {
+                        audioBlob = new Blob(chunks, { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        wavesurfer.load(audioUrl);
+                        audioControls.style.display = 'grid';
+                    };
+                    
+                    recorder.start();
+                    isRecording = true;
+                    
+                    // Update UI
+                    recordButton.querySelector('i').classList.remove('fa-microphone');
+                    recordButton.querySelector('i').classList.add('fa-stop');
+                    recordButton.classList.remove('btn-danger');
+                    recordButton.classList.add('btn-warning');
+                    recorderStatus.textContent = 'Recording...';
+                    
+                    // Start timer
+                    recordingSeconds = 0;
+                    updateRecordingTime();
+                    recordingTimer = setInterval(updateRecordingTime, 1000);
+                })
+                .catch(err => {
+                    console.error('Error accessing microphone:', err);
+                    alert('Error accessing microphone. Please ensure you have a microphone connected and have granted permission to use it.');
+                });
+        }
+        
+        function stopRecording() {
+            recorder.stop();
+            isRecording = false;
+            clearInterval(recordingTimer);
+            
+            // Update UI
+            recordButton.querySelector('i').classList.remove('fa-stop');
+            recordButton.querySelector('i').classList.add('fa-microphone');
+            recordButton.classList.remove('btn-warning');
+            recordButton.classList.add('btn-danger');
+            recorderStatus.textContent = 'Recording complete';
+        }
+        
+        function updateRecordingTime() {
+            recordingSeconds++;
+            const minutes = Math.floor(recordingSeconds / 60).toString().padStart(2, '0');
+            const seconds = (recordingSeconds % 60).toString().padStart(2, '0');
+            recorderTime.textContent = `${minutes}:${seconds}`;
+        }
+        
+        // Process recording
+        processButton.addEventListener('click', function() {
+            if (!audioBlob) return;
+            
+            // Show loading state
+            processButton.disabled = true;
+            processButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Processing...';
+            
+            // Create FormData
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.wav');
+            formData.append('accent', selectedAccent);
+            formData.append('preserve_identity', document.getElementById('identityPreservation').checked);
+            
+            // Make API call to process the audio
+            fetch('/api/process_accent', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Reset button
+                processButton.disabled = false;
+                processButton.innerHTML = '<i class="fas fa-wand-magic-sparkles me-2"></i> Process Recording';
+                
+                if (data.status === 'success') {
+                    // Show results with the processed audio
+                    resultsCard.style.display = 'block';
+                    processedAudio.src = data.processed_url;
+                    
+                    // Set the download link
+                    downloadButton.setAttribute('data-url', data.processed_url);
+                    
+                    // Update processing info
+                    const processingInfo = document.getElementById('processingInfo');
+                    processingInfo.innerHTML = `
+                        <div class="small">
+                            <p class="fw-bold mb-1">Processing complete:</p>
+                            <ul class="mb-0 ps-3">
+                                <li>Target accent: <span class="fw-bold">${data.accent}</span></li>
+                                <li>Identity preservation: <span class="fw-bold">${data.preserve_identity ? 'Enabled' : 'Disabled'}</span></li>
+                                <li>Sample duration: <span class="fw-bold">${recorderTime.textContent}</span></li>
+                                <li>Status: <span class="fw-bold text-success">Success</span></li>
+                            </ul>
+                        </div>
+                    `;
+                } else {
+                    // Show error message
+                    alert('Error processing audio: ' + data.message);
+                    
+                    // Update processing info with error
+                    const processingInfo = document.getElementById('processingInfo');
+                    processingInfo.innerHTML = `
+                        <div class="small">
+                            <p class="fw-bold mb-1 text-danger">Processing failed:</p>
+                            <p class="text-danger">${data.message}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                // Reset button
+                processButton.disabled = false;
+                processButton.innerHTML = '<i class="fas fa-wand-magic-sparkles me-2"></i> Process Recording';
+                
+                // Show error message
+                console.error('Error:', error);
+                alert('Error processing audio. Please try again.');
+                
+                // Update processing info with error
+                const processingInfo = document.getElementById('processingInfo');
+                processingInfo.innerHTML = `
+                    <div class="small">
+                        <p class="fw-bold mb-1 text-danger">Processing failed:</p>
+                        <p class="text-danger">An unexpected error occurred. Please try again.</p>
+                    </div>
+                `;
+            });
+        });
+        
+        // Clear recording
+        clearButton.addEventListener('click', function() {
+            audioBlob = null;
+            wavesurfer.empty();
+            audioControls.style.display = 'none';
+            resultsCard.style.display = 'none';
+            recorderStatus.textContent = 'Click to start recording';
+            recorderTime.textContent = '00:00';
+            recordingSeconds = 0;
+        });
+        
+        // Compare original and processed
+        compareButton.addEventListener('click', function() {
+            // In a real app, this would toggle between original and processed audio
+            alert('In a real application, this would allow you to compare the original and processed audio.');
+        });
+        
+        // Download processed audio
+        downloadButton.addEventListener('click', function() {
+            // In a real app, this would download the processed audio
+            const a = document.createElement('a');
+            a.href = processedAudio.src;
+            a.download = `dexent_${selectedAccent}_processed.wav`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+        
+        // Voice profile creation
+        const newProfileCard = document.querySelector('.new-profile-card');
+        const newProfileModal = document.getElementById('newProfileModal');
+        const newProfileModalObj = new bootstrap.Modal(newProfileModal);
+        
+        newProfileCard.addEventListener('click', function() {
+            newProfileModalObj.show();
+        });
+        
+        // Update processing info based on selections
+        function updateProcessingInfo() {
+            const preserveIdentity = document.getElementById('identityPreservation').checked;
+            const processingInfo = document.getElementById('processingInfo');
+            
+            processingInfo.innerHTML = `
+                <div class="small">
+                    <p class="fw-bold mb-1">Current settings:</p>
+                    <ul class="mb-0 ps-3">
+                        <li>Target accent: <span class="fw-bold">${selectedAccent}</span></li>
+                        <li>Identity preservation: <span class="fw-bold">${preserveIdentity ? 'Enabled' : 'Disabled'}</span></li>
+                    </ul>
+                    <p class="mt-2 mb-0 small text-muted">Record your voice to test these settings.</p>
+                </div>
+            `;
+        }
+        
+        // Initialize
+        updateProcessingInfo();
+    });
+</script>
+{% endblock %}
