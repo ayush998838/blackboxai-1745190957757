@@ -1,0 +1,898 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">My Dashboard</h5>
+                    <ul class="nav flex-column nav-pills">
+                        <li class="nav-item mb-2">
+                            <a class="nav-link active rounded-pill" href="#overview" data-bs-toggle="tab">
+                                <i class="fas fa-home me-2"></i> Overview
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#audioSettings" data-bs-toggle="tab">
+                                <i class="fas fa-sliders-h me-2"></i> Audio Settings
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#statistics" data-bs-toggle="tab">
+                                <i class="fas fa-chart-line me-2"></i> Statistics
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#voiceLibrary" data-bs-toggle="tab">
+                                <i class="fas fa-microphone-alt me-2"></i> Voice Library
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#activity" data-bs-toggle="tab">
+                                <i class="fas fa-history me-2"></i> Activity
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Quick Actions</h5>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-primary rounded-pill" onclick="recordVoiceSample()">
+                            <i class="fas fa-microphone-alt me-2"></i> Record Voice Sample
+                        </button>
+                        <button type="button" class="btn btn-outline-info rounded-pill" onclick="launchSystemTray()">
+                            <i class="fas fa-desktop me-2"></i> Launch Desktop App
+                        </button>
+                        <a href="/download/windows" class="btn btn-outline-success rounded-pill">
+                            <i class="fas fa-download me-2"></i> Download Windows Client
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="tab-content">
+                <!-- Overview Tab -->
+                <div class="tab-pane fade show active" id="overview">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-transparent">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 fw-bold">Audio Processing</h5>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="processingToggle" {% if audio_status.is_running %}checked{% endif %}>
+                                    <label class="form-check-label ms-2" for="processingToggle" id="processingStatus">
+                                        {% if audio_status.is_running %}Running{% else %}Stopped{% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <div class="card h-100 bg-primary bg-opacity-10 border-0 rounded-4">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-filter fa-2x mb-3 text-primary"></i>
+                                            <h5 class="card-title">Noise Suppression</h5>
+                                            <p class="card-text text-muted small">Removes background noise like keyboard typing, fans, and room echo.</p>
+                                            <div class="form-check form-switch d-flex justify-content-center">
+                                                <input class="form-check-input" type="checkbox" id="noiseSwitch" checked>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card h-100 bg-success bg-opacity-10 border-0 rounded-4">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-language fa-2x mb-3 text-success"></i>
+                                            <h5 class="card-title">Accent Conversion</h5>
+                                            <p class="card-text text-muted small">Modify your accent while preserving your voice identity.</p>
+                                            <div class="form-check form-switch d-flex justify-content-center">
+                                                <input class="form-check-input" type="checkbox" id="accentSwitch" checked>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card h-100 bg-info bg-opacity-10 border-0 rounded-4">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-fingerprint fa-2x mb-3 text-info"></i>
+                                            <h5 class="card-title">Identity Preservation</h5>
+                                            <p class="card-text text-muted small">Keep your unique voice characteristics during accent conversion.</p>
+                                            <div class="form-check form-switch d-flex justify-content-center">
+                                                <input class="form-check-input" type="checkbox" id="identitySwitch" checked>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h6 class="fw-bold mb-3">Target Accent</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="accent-option p-3 rounded-4 text-center selected">
+                                            <input type="radio" name="accent" value="american" id="american" class="d-none" checked>
+                                            <label for="american" class="d-block cursor-pointer">
+                                                <i class="fas fa-flag-usa fa-2x mb-2 text-primary"></i>
+                                                <h6 class="mb-1">American</h6>
+                                                <p class="text-muted small mb-0">US English</p>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="accent-option p-3 rounded-4 text-center">
+                                            <input type="radio" name="accent" value="british" id="british" class="d-none">
+                                            <label for="british" class="d-block cursor-pointer">
+                                                <i class="fas fa-landmark fa-2x mb-2 text-primary"></i>
+                                                <h6 class="mb-1">British</h6>
+                                                <p class="text-muted small mb-0">UK English</p>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="accent-option p-3 rounded-4 text-center">
+                                            <input type="radio" name="accent" value="australian" id="australian" class="d-none">
+                                            <label for="australian" class="d-block cursor-pointer">
+                                                <i class="fas fa-map-marker-alt fa-2x mb-2 text-primary"></i>
+                                                <h6 class="mb-1">Australian</h6>
+                                                <p class="text-muted small mb-0">Australian English</p>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-primary rounded-pill px-4">
+                                    <i class="fas fa-save me-2"></i> Save Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">Recent Activity</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Session Started</h6>
+                                        <p class="text-muted small mb-0">Today, 9:45 AM</p>
+                                        <p class="mb-0">Audio processing started with noise suppression and accent conversion.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Settings Updated</h6>
+                                        <p class="text-muted small mb-0">Yesterday, 3:20 PM</p>
+                                        <p class="mb-0">Changed target accent to American English.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Voice Sample Recorded</h6>
+                                        <p class="text-muted small mb-0">Yesterday, 2:15 PM</p>
+                                        <p class="mb-0">Recorded new voice sample for identity preservation.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-secondary"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Account Created</h6>
+                                        <p class="text-muted small mb-0">April 15, 2025</p>
+                                        <p class="mb-0">Welcome to Dexent.ai!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Audio Settings Tab -->
+                <div class="tab-pane fade" id="audioSettings">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">Audio Configuration</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Noise Suppression</h6>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="noiseSuppression" checked>
+                                        <label class="form-check-label" for="noiseSuppression">
+                                            Enable Noise Suppression
+                                        </label>
+                                    </div>
+                                    <p class="text-muted small">Removes background noise like keyboard typing, fans, and room echo.</p>
+                                    
+                                    <div class="mt-3">
+                                        <label for="noiseSuppressionLevel" class="form-label">Suppression Level</label>
+                                        <input type="range" class="form-range" min="0" max="100" step="10" id="noiseSuppressionLevel" value="70">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="small text-muted">Low</span>
+                                            <span class="small text-muted">Medium</span>
+                                            <span class="small text-muted">High</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Accent Conversion</h6>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="accentConversion" checked>
+                                        <label class="form-check-label" for="accentConversion">
+                                            Enable Accent Conversion
+                                        </label>
+                                    </div>
+                                    <p class="text-muted small">Converts your accent to the target accent in real-time.</p>
+                                    
+                                    <div class="row g-3 mt-2">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="targetAccent" id="americanAccent" value="american" checked>
+                                                <label class="form-check-label" for="americanAccent">
+                                                    American English
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="targetAccent" id="britishAccent" value="british">
+                                                <label class="form-check-label" for="britishAccent">
+                                                    British English
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="targetAccent" id="australianAccent" value="australian">
+                                                <label class="form-check-label" for="australianAccent">
+                                                    Australian English
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Voice Identity</h6>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="identityPreservation" checked>
+                                        <label class="form-check-label" for="identityPreservation">
+                                            Preserve Voice Identity
+                                        </label>
+                                    </div>
+                                    <p class="text-muted small">Keep your unique voice characteristics while adjusting accent.</p>
+                                    
+                                    <div class="mt-3 text-center">
+                                        <button type="button" class="btn btn-primary rounded-pill record-voice-btn" onclick="recordVoiceSample()">
+                                            <i class="fas fa-microphone-alt me-2"></i> Record Voice Sample
+                                        </button>
+                                        <p class="text-muted small mt-2">Recording a voice sample improves accent conversion quality.</p>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Audio Devices</h6>
+                                    
+                                    <div class="mb-3">
+                                        <label for="inputDevice" class="form-label">Input Device</label>
+                                        <select class="form-select" id="inputDevice">
+                                            <option value="default" selected>Default Microphone</option>
+                                            <option value="microphone">External Microphone</option>
+                                            <option value="headset">Headset Microphone</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="outputDevice" class="form-label">Output Device</label>
+                                        <select class="form-select" id="outputDevice">
+                                            <option value="default" selected>Default Speakers</option>
+                                            <option value="speakers">External Speakers</option>
+                                            <option value="headphones">Headphones</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                        <i class="fas fa-save me-2"></i> Save Settings
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Statistics Tab -->
+                <div class="tab-pane fade" id="statistics">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">Usage Statistics</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <div class="card h-100 bg-primary bg-opacity-10 border-0 rounded-4">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-clock fa-2x mb-3 text-primary"></i>
+                                            <h5 class="card-title">Total Usage Time</h5>
+                                            <h3 class="mb-0">42.5 hours</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card h-100 bg-success bg-opacity-10 border-0 rounded-4">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-filter fa-2x mb-3 text-success"></i>
+                                            <h5 class="card-title">Noise Removed</h5>
+                                            <h3 class="mb-0">98.2%</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card h-100 bg-info bg-opacity-10 border-0 rounded-4">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-calendar-alt fa-2x mb-3 text-info"></i>
+                                            <h5 class="card-title">Active Days</h5>
+                                            <h3 class="mb-0">15 days</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h6 class="fw-bold mb-3">Weekly Usage</h6>
+                                <div class="chart-container" style="height: 300px;">
+                                    <!-- Chart would be rendered here using Chart.js -->
+                                    <div class="d-flex align-items-center justify-content-center h-100">
+                                        <p class="text-muted">Usage chart will be displayed here.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">Processing Analytics</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <h6 class="fw-bold mb-3">Feature Usage</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label d-flex justify-content-between">
+                                                <span>Noise Suppression</span>
+                                                <span>85%</span>
+                                            </label>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-primary" role="progressbar" style="width: 85%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label d-flex justify-content-between">
+                                                <span>Accent Conversion</span>
+                                                <span>65%</span>
+                                            </label>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label d-flex justify-content-between">
+                                                <span>Identity Preservation</span>
+                                                <span>70%</span>
+                                            </label>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 70%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="chart-container" style="height: 200px;">
+                                            <!-- Pie chart would be rendered here using Chart.js -->
+                                            <div class="d-flex align-items-center justify-content-center h-100">
+                                                <p class="text-muted">Feature usage chart will be displayed here.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-outline-primary rounded-pill">
+                                    <i class="fas fa-download me-2"></i> Export Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Voice Library Tab -->
+                <div class="tab-pane fade" id="voiceLibrary">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 fw-bold">Voice Samples</h5>
+                                <button type="button" class="btn btn-primary btn-sm rounded-pill" onclick="recordVoiceSample()">
+                                    <i class="fas fa-microphone-alt me-1"></i> Record New
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="voice-sample-item p-3 mb-3 border rounded-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-microphone-alt fa-2x text-primary"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="fw-bold mb-1">Primary Voice Sample</h6>
+                                        <p class="text-muted small mb-2">Recorded on April 15, 2025</p>
+                                        <audio controls class="w-100 mb-2">
+                                            <source src="#" type="audio/wav">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-trash me-1"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i> Recording multiple voice samples in different environments can improve accent conversion quality.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Activity Tab -->
+                <div class="tab-pane fade" id="activity">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">Activity Log</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Session Started</h6>
+                                        <p class="text-muted small mb-0">Today, 9:45 AM</p>
+                                        <p class="mb-0">Audio processing started with noise suppression and accent conversion.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Settings Updated</h6>
+                                        <p class="text-muted small mb-0">Yesterday, 3:20 PM</p>
+                                        <p class="mb-0">Changed target accent to American English.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Voice Sample Recorded</h6>
+                                        <p class="text-muted small mb-0">Yesterday, 2:15 PM</p>
+                                        <p class="mb-0">Recorded new voice sample for identity preservation.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-secondary"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Account Created</h6>
+                                        <p class="text-muted small mb-0">April 15, 2025</p>
+                                        <p class="mb-0">Welcome to Dexent.ai!</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">Desktop App Installed</h6>
+                                        <p class="text-muted small mb-0">April 15, 2025</p>
+                                        <p class="mb-0">Installed Dexent.ai desktop application on Windows.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="fw-bold mb-1">First Login</h6>
+                                        <p class="text-muted small mb-0">April 15, 2025</p>
+                                        <p class="mb-0">First login to Dexent.ai platform.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle accent selection
+        const accentOptions = document.querySelectorAll('.accent-option');
+        accentOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                accentOptions.forEach(opt => opt.classList.remove('selected'));
+                
+                // Add selected class to the clicked option
+                this.classList.add('selected');
+                
+                // Check the radio button
+                const radioInput = this.querySelector('input[type="radio"]');
+                radioInput.checked = true;
+            });
+        });
+        
+        // Handle processing toggle
+        const processingToggle = document.getElementById('processingToggle');
+        const processingStatus = document.getElementById('processingStatus');
+        
+        if (processingToggle) {
+            processingToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    // Start processing
+                    fetch('/api/start_processing', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            processingStatus.textContent = 'Running';
+                            processingStatus.classList.remove('text-danger');
+                            processingStatus.classList.add('text-success');
+                        } else {
+                            processingStatus.textContent = 'Error';
+                            processingStatus.classList.remove('text-success');
+                            processingStatus.classList.add('text-danger');
+                            this.checked = false;
+                        }
+                    });
+                } else {
+                    // Stop processing
+                    fetch('/api/stop_processing', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            processingStatus.textContent = 'Stopped';
+                            processingStatus.classList.remove('text-success');
+                            processingStatus.classList.add('text-danger');
+                        } else {
+                            processingStatus.textContent = 'Error';
+                            processingStatus.classList.remove('text-success');
+                            processingStatus.classList.add('text-danger');
+                            this.checked = true;
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>
+
+<!-- Voice Recording Modal -->
+<div class="modal fade" id="recordVoiceModal" tabindex="-1" aria-labelledby="recordVoiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold" id="recordVoiceModalLabel">Record Voice Sample</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <p class="text-muted mb-4">Record a short voice sample to help preserve your voice identity during accent conversion.</p>
+                
+                <div id="recordingSteps">
+                    <div id="step1" class="recording-step active">
+                        <div class="text-center mb-4">
+                            <div class="microphone-container">
+                                <i class="fas fa-microphone fa-4x text-primary"></i>
+                            </div>
+                            <h5 class="mt-3">Read the following text:</h5>
+                            <div class="sample-text p-3 rounded bg-light my-3">
+                                "The quick brown fox jumps over the lazy dog. The five boxing wizards jump quickly."
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button id="startRecordingBtn" class="btn btn-primary rounded-pill">
+                                <i class="fas fa-microphone me-2"></i> Start Recording
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="step2" class="recording-step" style="display: none;">
+                        <div class="text-center mb-4">
+                            <div class="recording-indicator">
+                                <span class="recording-pulse"></span>
+                                <i class="fas fa-microphone text-danger"></i>
+                            </div>
+                            <h5 class="mt-3 text-danger">Recording in progress...</h5>
+                            <p>Please read the sample text clearly</p>
+                            <div class="time-counter">00:00</div>
+                        </div>
+                        <div class="d-grid">
+                            <button id="stopRecordingBtn" class="btn btn-danger rounded-pill">
+                                <i class="fas fa-stop-circle me-2"></i> Stop Recording
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="step3" class="recording-step" style="display: none;">
+                        <div class="text-center mb-4">
+                            <div class="waveform-container mb-3">
+                                <div id="waveform"></div>
+                            </div>
+                            <div class="audio-controls mb-3">
+                                <button id="playBtn" class="btn btn-sm btn-outline-primary rounded-circle me-2">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button id="pauseBtn" class="btn btn-sm btn-outline-primary rounded-circle me-2">
+                                    <i class="fas fa-pause"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button id="resetRecordingBtn" class="btn btn-outline-secondary rounded-pill flex-grow-1">
+                                <i class="fas fa-redo me-2"></i> Record Again
+                            </button>
+                            <button id="saveRecordingBtn" class="btn btn-primary rounded-pill flex-grow-1">
+                                <i class="fas fa-save me-2"></i> Save Sample
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="step4" class="recording-step" style="display: none;">
+                        <div class="text-center mb-4">
+                            <div class="success-icon">
+                                <i class="fas fa-check-circle fa-4x text-success"></i>
+                            </div>
+                            <h5 class="mt-3">Voice Sample Saved!</h5>
+                            <p>Your voice identity will be preserved during accent conversion.</p>
+                        </div>
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-primary rounded-pill" data-bs-dismiss="modal">
+                                Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .recording-step {
+        transition: all 0.3s ease;
+    }
+    .microphone-container {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: rgba(var(--bs-primary-rgb), 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+    .recording-indicator {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .recording-pulse {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: rgba(var(--bs-danger-rgb), 0.2);
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% {
+            transform: scale(0.95);
+            opacity: 0.7;
+        }
+        50% {
+            transform: scale(1.1);
+            opacity: 0.3;
+        }
+        100% {
+            transform: scale(0.95);
+            opacity: 0.7;
+        }
+    }
+    .time-counter {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 1rem 0;
+    }
+    .waveform-container {
+        background-color: rgba(var(--bs-dark-rgb), 0.1);
+        border-radius: 8px;
+        padding: 10px;
+        height: 100px;
+    }
+    .success-icon {
+        margin: 20px auto;
+    }
+    .sample-text {
+        font-style: italic;
+        line-height: 1.5;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Recording functionality
+    let mediaRecorder;
+    let audioChunks = [];
+    let recordingTimer;
+    let seconds = 0;
+    let audioBlob;
+    let audioUrl;
+    
+    const startRecordingBtn = document.getElementById('startRecordingBtn');
+    const stopRecordingBtn = document.getElementById('stopRecordingBtn');
+    const resetRecordingBtn = document.getElementById('resetRecordingBtn');
+    const saveRecordingBtn = document.getElementById('saveRecordingBtn');
+    const playBtn = document.getElementById('playBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const timeCounter = document.querySelector('.time-counter');
+    
+    if (startRecordingBtn) {
+        startRecordingBtn.addEventListener('click', function() {
+            // Request microphone access
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    // Show recording step
+                    document.getElementById('step1').style.display = 'none';
+                    document.getElementById('step2').style.display = 'block';
+                    
+                    // Start recording
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+                    
+                    audioChunks = [];
+                    seconds = 0;
+                    
+                    // Update timer
+                    recordingTimer = setInterval(updateTimer, 1000);
+                    
+                    // Collect audio chunks
+                    mediaRecorder.addEventListener('dataavailable', event => {
+                        audioChunks.push(event.data);
+                    });
+                    
+                    // When recording stops
+                    mediaRecorder.addEventListener('stop', () => {
+                        // Create audio blob
+                        audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        audioUrl = URL.createObjectURL(audioBlob);
+                        
+                        // Display waveform (placeholder - would use wavesurfer.js in production)
+                        document.getElementById('waveform').innerHTML = '<div style="width:100%;height:80px;background:linear-gradient(90deg,var(--bs-primary) 0%,var(--bs-info) 100%);border-radius:4px;"></div>';
+                        
+                        // Move to review step
+                        document.getElementById('step2').style.display = 'none';
+                        document.getElementById('step3').style.display = 'block';
+                    });
+                })
+                .catch(error => {
+                    console.error('Error accessing microphone:', error);
+                    alert('Unable to access microphone. Please ensure you have granted permission.');
+                });
+        });
+    }
+    
+    if (stopRecordingBtn) {
+        stopRecordingBtn.addEventListener('click', function() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                clearInterval(recordingTimer);
+                
+                // Stop all tracks in the stream
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+        });
+    }
+    
+    if (resetRecordingBtn) {
+        resetRecordingBtn.addEventListener('click', function() {
+            // Reset and go back to step 1
+            audioChunks = [];
+            seconds = 0;
+            timeCounter.textContent = '00:00';
+            
+            document.getElementById('step3').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+        });
+    }
+    
+    if (saveRecordingBtn) {
+        saveRecordingBtn.addEventListener('click', function() {
+            // Create form data to upload the audio file
+            const formData = new FormData();
+            formData.append('audio_sample', audioBlob, 'voice_sample.wav');
+            
+            // Upload the voice sample
+            fetch('/api/upload_voice_sample', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Show success step
+                    document.getElementById('step3').style.display = 'none';
+                    document.getElementById('step4').style.display = 'block';
+                } else {
+                    console.error('Error uploading voice sample:', data.message);
+                    alert('Failed to upload voice sample. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        });
+    }
+    
+    if (playBtn) {
+        playBtn.addEventListener('click', function() {
+            if (audioUrl) {
+                const audio = new Audio(audioUrl);
+                audio.play();
+            }
+        });
+    }
+    
+    function updateTimer() {
+        seconds++;
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        timeCounter.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+});
+</script>
+
+{% endblock %}
