@@ -1,0 +1,513 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Settings</h5>
+                    <ul class="nav flex-column nav-pills">
+                        <li class="nav-item mb-2">
+                            <a class="nav-link active rounded-pill" href="#general" data-bs-toggle="tab">
+                                <i class="fas fa-cog me-2"></i> General
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#audio" data-bs-toggle="tab">
+                                <i class="fas fa-microphone-alt me-2"></i> Audio
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#account" data-bs-toggle="tab">
+                                <i class="fas fa-user me-2"></i> Account
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#notifications" data-bs-toggle="tab">
+                                <i class="fas fa-bell me-2"></i> Notifications
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded-pill" href="#applications" data-bs-toggle="tab">
+                                <i class="fas fa-desktop me-2"></i> Applications
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Quick Actions</h5>
+                    <div class="d-grid gap-2">
+                        <a href="/dashboard" class="btn btn-outline-primary rounded-pill">
+                            <i class="fas fa-tachometer-alt me-2"></i> Back to Dashboard
+                        </a>
+                        <button type="button" class="btn btn-outline-danger rounded-pill" data-bs-toggle="modal" data-bs-target="#resetSettingsModal">
+                            <i class="fas fa-undo me-2"></i> Reset to Default
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="tab-content">
+                <!-- General Settings Tab -->
+                <div class="tab-pane fade show active" id="general">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">General Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Theme</h6>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="theme" id="darkTheme" value="dark" checked>
+                                        <label class="form-check-label" for="darkTheme">
+                                            Dark Theme
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="theme" id="lightTheme" value="light">
+                                        <label class="form-check-label" for="lightTheme">
+                                            Light Theme
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="theme" id="systemTheme" value="system">
+                                        <label class="form-check-label" for="systemTheme">
+                                            Use System Theme
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Language</h6>
+                                    <select class="form-select" id="languageSelect">
+                                        <option value="en" selected>English</option>
+                                        <option value="es">Español</option>
+                                        <option value="fr">Français</option>
+                                        <option value="de">Deutsch</option>
+                                        <option value="zh">中文</option>
+                                        <option value="ja">日本語</option>
+                                    </select>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Startup Behavior</h6>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="startWithSystem" checked>
+                                        <label class="form-check-label" for="startWithSystem">
+                                            Start Dexent.ai when system starts
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="startMinimized" checked>
+                                        <label class="form-check-label" for="startMinimized">
+                                            Start minimized to system tray
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="autoUpdate" checked>
+                                        <label class="form-check-label" for="autoUpdate">
+                                            Automatically check for updates
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-primary rounded-pill px-4 save-settings-btn">
+                                        <i class="fas fa-save me-2"></i> Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Audio Settings Tab -->
+                <div class="tab-pane fade" id="audio">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">Audio Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Audio Devices</h6>
+                                    
+                                    <div class="mb-3">
+                                        <label for="inputDevice" class="form-label">Input Device</label>
+                                        <select class="form-select" id="inputDevice">
+                                            <option value="default" selected>Default Microphone</option>
+                                            <option value="microphone">External Microphone</option>
+                                            <option value="headset">Headset Microphone</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="outputDevice" class="form-label">Output Device</label>
+                                        <select class="form-select" id="outputDevice">
+                                            <option value="default" selected>Default Speakers</option>
+                                            <option value="speakers">External Speakers</option>
+                                            <option value="headphones">Headphones</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Audio Quality</h6>
+                                    
+                                    <div class="mb-3">
+                                        <label for="sampleRate" class="form-label">Sample Rate</label>
+                                        <select class="form-select" id="sampleRate">
+                                            <option value="16000">16 kHz (Low Quality)</option>
+                                            <option value="24000">24 kHz (Medium Quality)</option>
+                                            <option value="44100" selected>44.1 kHz (CD Quality)</option>
+                                            <option value="48000">48 kHz (High Quality)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="bitDepth" class="form-label">Bit Depth</label>
+                                        <select class="form-select" id="bitDepth">
+                                            <option value="16" selected>16-bit</option>
+                                            <option value="24">24-bit</option>
+                                            <option value="32">32-bit</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Processing Options</h6>
+                                    
+                                    <div class="mb-3">
+                                        <label for="bufferSize" class="form-label">Buffer Size</label>
+                                        <select class="form-select" id="bufferSize">
+                                            <option value="256">256 (Lowest Latency)</option>
+                                            <option value="512">512 (Low Latency)</option>
+                                            <option value="1024" selected>1024 (Balanced)</option>
+                                            <option value="2048">2048 (High Quality)</option>
+                                            <option value="4096">4096 (Highest Quality)</option>
+                                        </select>
+                                        <div class="form-text">Lower values reduce latency but may cause audio glitches.</div>
+                                    </div>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="enableProcessing" checked>
+                                        <label class="form-check-label" for="enableProcessing">
+                                            Enable Audio Processing
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="useHardwareAcceleration" checked>
+                                        <label class="form-check-label" for="useHardwareAcceleration">
+                                            Use Hardware Acceleration
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-primary rounded-pill px-4 save-settings-btn">
+                                        <i class="fas fa-save me-2"></i> Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Settings Tab -->
+                <div class="tab-pane fade" id="account">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">Account Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-container position-relative">
+                                        <img src="/static/assets/default-avatar.svg" alt="User Avatar" class="rounded-circle" width="80" height="80">
+                                        <button class="btn btn-sm btn-primary rounded-circle position-absolute" style="bottom: 0; right: 0;">
+                                            <i class="fas fa-camera"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h5 class="fw-bold mb-1">{{ current_user.username }}</h5>
+                                    <p class="text-muted mb-0">{{ current_user.email }}</p>
+                                </div>
+                            </div>
+                            
+                            <form>
+                                <div class="mb-3">
+                                    <label for="accountUsername" class="form-label">Display Name</label>
+                                    <input type="text" class="form-control" id="accountUsername" value="{{ current_user.username }}">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="accountEmail" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="accountEmail" value="{{ current_user.email }}">
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <h6 class="fw-bold mb-3">Change Password</h6>
+                                
+                                <div class="mb-3">
+                                    <label for="currentPassword" class="form-label">Current Password</label>
+                                    <input type="password" class="form-control" id="currentPassword">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" id="newPassword">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" id="confirmNewPassword">
+                                </div>
+                                
+                                <div class="text-end mb-4">
+                                    <button type="button" class="btn btn-outline-primary rounded-pill px-4">
+                                        <i class="fas fa-key me-2"></i> Update Password
+                                    </button>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <h6 class="fw-bold mb-3 text-danger">Danger Zone</h6>
+                                
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Delete Account</h6>
+                                        <p class="text-muted small mb-0">Permanently delete your account and all associated data.</p>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-danger rounded-pill" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                                        <i class="fas fa-trash me-2"></i> Delete Account
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notifications Tab -->
+                <div class="tab-pane fade" id="notifications">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">Notification Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Email Notifications</h6>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="emailProductUpdates" checked>
+                                        <label class="form-check-label" for="emailProductUpdates">
+                                            Product updates and announcements
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="emailTips" checked>
+                                        <label class="form-check-label" for="emailTips">
+                                            Tips and best practices
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="emailSecurity" checked>
+                                        <label class="form-check-label" for="emailSecurity">
+                                            Security alerts
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="emailMarketing">
+                                        <label class="form-check-label" for="emailMarketing">
+                                            Marketing communications
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Desktop Notifications</h6>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="desktopUpdates" checked>
+                                        <label class="form-check-label" for="desktopUpdates">
+                                            Software updates available
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="desktopActivity" checked>
+                                        <label class="form-check-label" for="desktopActivity">
+                                            Audio processing activity
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="desktopTips">
+                                        <label class="form-check-label" for="desktopTips">
+                                            Tips and suggestions
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-primary rounded-pill px-4 save-settings-btn">
+                                        <i class="fas fa-save me-2"></i> Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Applications Tab -->
+                <div class="tab-pane fade" id="applications">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0 fw-bold">Connected Applications</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="connected-app-item p-3 mb-3 border rounded-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fab fa-windows fa-2x text-primary"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h6 class="fw-bold mb-1">Windows Desktop App</h6>
+                                            <span class="badge bg-success rounded-pill">Connected</span>
+                                        </div>
+                                        <p class="text-muted small mb-0">Last used: Today at 10:45 AM</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="connected-app-item p-3 mb-3 border rounded-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fab fa-google fa-2x text-primary"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h6 class="fw-bold mb-1">Google Account</h6>
+                                            <button class="btn btn-sm btn-outline-danger rounded-pill">Disconnect</button>
+                                        </div>
+                                        <p class="text-muted small mb-0">Connected: April 15, 2025</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="connected-app-item p-3 mb-4 border rounded-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fab fa-discord fa-2x text-primary"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h6 class="fw-bold mb-1">Discord</h6>
+                                            <button class="btn btn-sm btn-outline-primary rounded-pill">Connect</button>
+                                        </div>
+                                        <p class="text-muted small mb-0">Not connected</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p class="text-muted small">
+                                <i class="fas fa-info-circle me-1"></i> Connected applications can access your Dexent.ai account and perform actions on your behalf.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Settings Modal -->
+<div class="modal fade" id="resetSettingsModal" tabindex="-1" aria-labelledby="resetSettingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold" id="resetSettingsModalLabel">Reset Settings</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to reset all settings to their default values? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger rounded-pill">Reset Settings</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Account Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold text-danger" id="deleteAccountModalLabel">Delete Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i> This action is permanent and cannot be undone.
+                </div>
+                <p>Are you sure you want to delete your account? All your data, settings, and voice samples will be permanently deleted.</p>
+                <div class="mb-3">
+                    <label for="deleteConfirmPassword" class="form-label">Enter your password to confirm:</label>
+                    <input type="password" class="form-control" id="deleteConfirmPassword" required>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger rounded-pill">Delete Account</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Save settings button
+        const saveButtons = document.querySelectorAll('.save-settings-btn');
+        saveButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Show notification
+                showNotification('Settings saved successfully!', 'success');
+            });
+        });
+    });
+</script>
+{% endblock %}
